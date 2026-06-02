@@ -15,8 +15,8 @@ export function RagBadge({ rag, size = "md", className, ...props }: RagBadgeProp
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full font-medium",
-        size === "sm" ? "text-[10.5px] px-1.5 py-0.5" : "text-[11.5px] px-2 py-0.5",
+        "inline-flex items-center gap-1.5 rounded-full font-medium font-display",
+        size === "sm" ? "text-[10.5px] px-2 py-0.5" : "text-[11.5px] px-2.5 py-1",
         className
       )}
       style={{ background: c.bg, color: c.text }}
@@ -39,7 +39,7 @@ export function PlainBadge({ className, ...props }: React.HTMLAttributes<HTMLSpa
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full bg-[color:var(--color-background)] px-2 py-0.5 text-[11px] text-[color:var(--color-muted)] border border-[color:var(--color-border)]",
+        "inline-flex items-center rounded-full bg-[color:var(--color-cream)] px-2.5 py-0.5 text-[11px] text-[color:var(--color-ink-soft)] border border-[color:var(--color-line)] font-medium",
         className
       )}
       {...props}

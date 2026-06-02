@@ -1,65 +1,77 @@
 "use client";
 
 import Image from "next/image";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Bell, Search } from "lucide-react";
 
 export function Header() {
   return (
-    <header className="h-16 border-b border-[color:var(--color-border)] bg-white flex items-center px-6 gap-6">
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2">
-          <div className="relative w-5 h-5">
-            <span
-              className="absolute inset-0 rotate-45 border-[1.5px]"
-              style={{ borderColor: "var(--color-sycamore)" }}
-            />
-            <span
-              className="absolute inset-[5px] rotate-45"
-              style={{ background: "var(--color-sycamore)" }}
-            />
-          </div>
-          <div className="leading-tight">
-            <div className="text-[13px] font-medium tracking-[0.18em] text-[color:var(--color-sycamore)]">
-              SYCAMORE SQUARE
-            </div>
-            <div className="text-[10.5px] text-[color:var(--color-muted)] -mt-0.5">
-              Roof asset portal
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="h-8 w-px bg-[color:var(--color-border)]" />
-
-      <div className="flex items-center gap-3">
-        <div className="relative h-9 w-[110px]">
+    <header className="border-b border-[color:var(--color-line)] bg-[color:var(--color-paper)]">
+      <div className="h-[72px] flex items-center px-7 gap-7">
+        {/* Sycamore Square real logo */}
+        <a href="/" className="flex items-center">
           <Image
-            src="/uob-logo.jpg"
-            alt="University of Bradford"
-            fill
-            sizes="110px"
+            src="/sycamore-logo.svg"
+            alt="Sycamore Square Group"
+            width={172}
+            height={48}
             priority
-            className="object-contain object-left"
+            className="h-10 w-auto"
           />
-        </div>
-        <div className="leading-tight">
-          <div className="text-[11px] text-[color:var(--color-muted)]">
-            Estates & Facilities
+        </a>
+
+        {/* Subtle product label */}
+        <div className="hidden md:flex items-center gap-3">
+          <div className="h-7 w-px bg-[color:var(--color-line-strong)]" />
+          <div className="flex flex-col leading-tight">
+            <span className="font-display text-[14px] font-semibold text-[color:var(--color-ink-strong)] tracking-tight">
+              Roof asset portal
+            </span>
+            <span className="text-[11.5px] text-[color:var(--color-ink-muted)] font-body">
+              Capital condition platform
+            </span>
           </div>
         </div>
-      </div>
 
-      <div className="flex-1" />
-
-      <div className="flex items-center gap-2.5 rounded-full border border-[color:var(--color-border)] bg-white pl-1 pr-2 py-1 hover:bg-[color:var(--color-background)] transition-colors cursor-pointer">
-        <div
-          className="h-6 w-6 rounded-full flex items-center justify-center text-[10px] font-medium text-white"
-          style={{ background: "var(--color-sycamore)" }}
-        >
-          AB
+        {/* Client badge */}
+        <div className="hidden lg:flex items-center gap-2.5 ml-auto bg-[color:var(--color-cream)] border border-[color:var(--color-line)] rounded-full pl-2 pr-3 py-1">
+          <div className="relative h-7 w-[80px]">
+            <Image
+              src="/uob-logo.jpg"
+              alt="University of Bradford"
+              fill
+              sizes="80px"
+              className="object-contain object-left"
+            />
+          </div>
+          <div className="h-4 w-px bg-[color:var(--color-line-strong)]" />
+          <span className="text-[11.5px] font-medium text-[color:var(--color-ink-soft)]">
+            Estates &amp; Facilities
+          </span>
         </div>
-        <span className="text-[12px] text-[color:var(--color-foreground)]">Alex Bradford</span>
-        <ChevronDown className="h-3 w-3 text-[color:var(--color-muted)]" />
+
+        {/* Right side actions */}
+        <div className="flex items-center gap-2 lg:ml-3">
+          <button className="h-9 w-9 rounded-full hover:bg-[color:var(--color-cream)] text-[color:var(--color-ink-muted)] flex items-center justify-center transition-colors">
+            <Search className="h-4 w-4" />
+          </button>
+          <button className="h-9 w-9 rounded-full hover:bg-[color:var(--color-cream)] text-[color:var(--color-ink-muted)] flex items-center justify-center transition-colors relative">
+            <Bell className="h-4 w-4" />
+            <span className="absolute top-2 right-2 h-1.5 w-1.5 rounded-full bg-[color:var(--color-accent-red)]" />
+          </button>
+
+          <div className="flex items-center gap-2.5 pl-2 pr-1 py-1 rounded-full hover:bg-[color:var(--color-cream)] cursor-pointer transition-colors">
+            <div className="leading-tight text-right hidden md:block">
+              <div className="text-[12.5px] font-medium text-[color:var(--color-ink-strong)]">
+                Alex Bradford
+              </div>
+              <div className="text-[11px] text-[color:var(--color-ink-muted)]">Senior surveyor</div>
+            </div>
+            <div className="h-8 w-8 rounded-full bg-[color:var(--color-sycamore)] text-white flex items-center justify-center text-[11px] font-medium font-display">
+              AB
+            </div>
+            <ChevronDown className="h-3.5 w-3.5 text-[color:var(--color-ink-muted)]" />
+          </div>
+        </div>
       </div>
     </header>
   );

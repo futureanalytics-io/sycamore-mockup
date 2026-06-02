@@ -29,17 +29,17 @@ export const RagRadioItem = React.forwardRef<
   <RadioGroupPrimitive.Item
     ref={ref}
     className={cn(
-      "group flex items-center gap-2.5 rounded-md border border-[color:var(--color-border-strong)] bg-white px-3 py-2 text-left text-[13px] transition-colors hover:bg-[color:var(--color-background)] data-[state=checked]:border-[color:var(--color-sycamore)]/40 data-[state=checked]:bg-[color:var(--color-sycamore-soft)]/40 focus:outline-none focus:ring-1 focus:ring-[color:var(--color-sycamore)]/40",
+      "group flex items-center gap-2.5 rounded-lg border border-[color:var(--color-line-strong)] bg-[color:var(--color-paper)] px-3 py-2.5 text-left text-[13px] transition-all hover:border-[color:var(--color-sycamore)]/40 data-[state=checked]:border-[color:var(--color-sycamore)] data-[state=checked]:bg-[color:var(--color-sycamore-tint)] data-[state=checked]:shadow-[0_0_0_3px_rgba(55,117,135,0.08)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-sycamore)]/30",
       className
     )}
     {...props}
   >
     <span
-      className="h-3.5 w-3.5 rounded-sm"
+      className="h-4 w-4 rounded-md shrink-0"
       style={{ backgroundColor: swatch, border: `1px solid ${swatchStroke}` }}
     />
-    <span className="flex-1 text-[color:var(--color-foreground)]">{label}</span>
-    <span className="h-3 w-3 rounded-full border border-[color:var(--color-border-strong)] bg-white group-data-[state=checked]:border-[color:var(--color-sycamore)] group-data-[state=checked]:bg-[color:var(--color-sycamore)] relative after:absolute after:inset-[3px] after:rounded-full after:bg-white after:opacity-0 group-data-[state=checked]:after:opacity-100" />
+    <span className="flex-1 text-[color:var(--color-ink-strong)] font-medium font-display">{label}</span>
+    <span className="h-3.5 w-3.5 rounded-full border border-[color:var(--color-line-strong)] bg-white group-data-[state=checked]:border-[color:var(--color-sycamore)] group-data-[state=checked]:bg-[color:var(--color-sycamore)] relative after:absolute after:inset-[3px] after:rounded-full after:bg-white after:opacity-0 group-data-[state=checked]:after:opacity-100" />
   </RadioGroupPrimitive.Item>
 ));
 RagRadioItem.displayName = "RagRadioItem";

@@ -1,7 +1,7 @@
 "use client";
 
 import { create } from "zustand";
-import type { AuditEntry, Building, RagStatus, RoofSection } from "./types";
+import type { AuditEntry, Building, RagStatus, RoofSection, RoofType } from "./types";
 import { seedBuildings } from "./buildings-seed";
 import { seedAudits } from "./audits-seed";
 
@@ -14,6 +14,20 @@ interface SubmitAuditPayload {
   auditor?: string;
 }
 
+interface UpdateSectionPayload {
+  sectionId: string;
+  patch: {
+    rag?: RagStatus;
+    areaSqm?: number;
+    forecastCostGbp?: number;
+    lifeRemainingYears?: number;
+    roofType?: RoofType;
+    buildingName?: string;
+  };
+  changeNote?: string;
+  auditor?: string;
+}
+
 interface PortalState {
   buildings: Building[];
   auditLog: AuditEntry[];
@@ -23,6 +37,7 @@ interface PortalState {
   selectSection: (id: string | null) => void;
   toggleEditMode: () => void;
   submitAudit: (payload: SubmitAuditPayload) => AuditEntry;
+  updateSection: (payload: UpdateSectionPayload) => AuditEntry | null;
   updatePolygon: (sectionId: string, polygon: [number, number][]) => void;
   addPolygon: (buildingCode: string, sectionId: string, polygon: [number, number][]) => void;
   exportSeed: () => string;
@@ -95,6 +110,96 @@ export const usePortalStore = create<PortalState>((set, get) => ({
     });
 
     return entry;
+  },
+
+  updateSection: ({ sectionId, patch, changeNote, auditor }) => {
+    const state = get();
+    const found = findSection(state.buildings, sectionId);
+    if (!found) return null;
+    const { section, building } = found;
+
+    const changes: string[] = [];
+    if (patch.rag && patch.rag !== section.rag)
+      changes.push(`RAG ${section.rag} → ${patch.rag}`);
+    if (typeof patch.areaSqm === "number" && patch.areaSqm !== section.areaSqm)
+      changes.push(`area ${section.areaSqm}m² → ${patch.areaSqm}m²`);
+    if (
+      typeof patch.forecastCostGbp === "number" &&
+      patch.forecastCostGbp !== section.forecastCostGbp
+    )
+      changes.push(
+        `forecast £${section.forecastCostGbp.toLocaleString()} → £${patch.forecastCostGbp.toLocaleString()}`
+      );
+    if (
+      typeof patch.lifeRemainingYears === "number" &&
+      patch.lifeRemainingYears !== section.lifeRemainingYears
+    )
+      changes.push(`life ${section.lifeRemainingYears}y → ${patch.lifeRemainingYears}y`);
+    if (patch.roofType && patch.roofType !== section.roofType)
+      changes.push(`type ${section.roofType} → ${patch.roofType}`);
+    if (patch.buildingName && patch.buildingName !== building.name)
+      changes.push(`building renamed → ${patch.buildingName}`);
+
+    if (changes.length === 0 && !changeNote) return null;
+
+    const auditEntry: AuditEntry =
+      patch.rag && patch.rag !== section.rag
+        ? {
+            id: `a-${Date.now()}`,
+            sectionId,
+            buildingCode: building.code,
+            timestamp: new Date().toISOString(),
+            auditor: auditor || "Demo User",
+            ragBefore: section.rag,
+            ragAfter: patch.rag,
+            lifeRemainingYears:
+              patch.lifeRemainingYears ?? section.lifeRemainingYears,
+            notes:
+              changeNote ||
+              `Master data update — ${changes.join("; ")}.`,
+            area: "Master data update",
+          }
+        : {
+            id: `a-${Date.now()}`,
+            sectionId,
+            buildingCode: building.code,
+            timestamp: new Date().toISOString(),
+            auditor: auditor || "Demo User",
+            ragBefore: section.rag,
+            ragAfter: section.rag,
+            lifeRemainingYears:
+              patch.lifeRemainingYears ?? section.lifeRemainingYears,
+            notes:
+              changeNote ||
+              `Master data update — ${changes.join("; ")}.`,
+            area: "Master data update",
+          };
+
+    set({
+      buildings: state.buildings.map((b) => {
+        if (b.code !== building.code) return b;
+        return {
+          ...b,
+          name: patch.buildingName ?? b.name,
+          sections: b.sections.map((s) =>
+            s.id !== sectionId
+              ? s
+              : {
+                  ...s,
+                  rag: patch.rag ?? s.rag,
+                  areaSqm: patch.areaSqm ?? s.areaSqm,
+                  forecastCostGbp: patch.forecastCostGbp ?? s.forecastCostGbp,
+                  lifeRemainingYears:
+                    patch.lifeRemainingYears ?? s.lifeRemainingYears,
+                  roofType: patch.roofType ?? s.roofType,
+                }
+          ),
+        };
+      }),
+      auditLog: [auditEntry, ...state.auditLog],
+    });
+
+    return auditEntry;
   },
 
   updatePolygon: (sectionId, polygon) => {

@@ -3,25 +3,25 @@ import type { RagStatus } from "./types";
 
 export const RAG_COLORS: Record<RagStatus, { fill: string; stroke: string; label: string; bg: string; text: string }> = {
   red: {
-    fill: "#E24B4A",
-    stroke: "#A32D2D",
+    fill: "#E25E44",
+    stroke: "#A73A25",
     label: "Red",
-    bg: "rgba(226, 75, 74, 0.12)",
-    text: "#A32D2D",
+    bg: "rgba(226, 94, 68, 0.15)",
+    text: "#A73A25",
   },
   amber: {
-    fill: "#EF9F27",
-    stroke: "#BA7517",
+    fill: "#DEB71B",
+    stroke: "#9C7D09",
     label: "Amber",
-    bg: "rgba(239, 159, 39, 0.14)",
-    text: "#9A5E0F",
+    bg: "rgba(222, 183, 27, 0.18)",
+    text: "#7B6204",
   },
   green: {
-    fill: "#97C459",
-    stroke: "#3B6D11",
+    fill: "#76A160",
+    stroke: "#426D30",
     label: "Green",
-    bg: "rgba(151, 196, 89, 0.18)",
-    text: "#3B6D11",
+    bg: "rgba(118, 161, 96, 0.18)",
+    text: "#426D30",
   },
 };
 
@@ -31,7 +31,7 @@ export function ragPathOptions(rag: RagStatus, selected = false, hovered = false
     color: c.stroke,
     weight: selected ? 3 : hovered ? 2.2 : 1.5,
     fillColor: c.fill,
-    fillOpacity: selected ? 0.85 : hovered ? 0.78 : 0.65,
+    fillOpacity: selected ? 0.85 : hovered ? 0.78 : 0.62,
     opacity: 1,
   };
 }
@@ -55,5 +55,5 @@ export function formatGbpFull(n: number): string {
 }
 
 export function formatArea(n: number): string {
-  return `${new Intl.NumberFormat("en-GB").format(Math.round(n))} m²`;
+  return `${new Intl.NumberFormat("en-GB").format(Math.round(n))} m²`;
 }

@@ -12,7 +12,7 @@ export const TabsList = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.List
     ref={ref}
-    className={cn("inline-flex h-12 items-end gap-6", className)}
+    className={cn("inline-flex h-12 items-end gap-7", className)}
     {...props}
   />
 ));
@@ -25,7 +25,7 @@ export const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "relative h-12 inline-flex items-center text-[13px] font-medium text-[color:var(--color-muted)] hover:text-[color:var(--color-foreground)] transition-colors data-[state=active]:text-[color:var(--color-sycamore)] focus:outline-none after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-transparent data-[state=active]:after:bg-[color:var(--color-sycamore)]",
+      "relative h-12 inline-flex items-center gap-2 text-[13.5px] font-display font-semibold text-[color:var(--color-ink-muted)] hover:text-[color:var(--color-ink-strong)] transition-colors data-[state=active]:text-[color:var(--color-sycamore)] focus:outline-none after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2.5px] after:bg-transparent data-[state=active]:after:bg-[color:var(--color-sycamore)]",
       className
     )}
     {...props}

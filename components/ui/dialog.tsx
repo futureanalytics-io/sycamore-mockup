@@ -17,7 +17,7 @@ export const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "fixed inset-0 z-50 bg-black/40 backdrop-blur-[2px] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "fixed inset-0 z-50 bg-[rgba(17,32,37,0.42)] backdrop-blur-[3px] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className
     )}
     {...props}
@@ -34,13 +34,13 @@ export const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed left-1/2 top-1/2 z-50 w-full max-w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-lg border border-[color:var(--color-border)] bg-white p-0 shadow-xl focus:outline-none",
+        "fixed left-1/2 top-1/2 z-50 w-full max-w-[560px] -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-paper)] p-0 shadow-[0_30px_60px_-20px_rgba(17,32,37,0.35),0_2px_6px_rgba(17,32,37,0.08)] focus:outline-none overflow-hidden",
         className
       )}
       {...props}
     >
       {children}
-      <DialogPrimitive.Close className="absolute right-3 top-3 rounded p-1 text-[color:var(--color-muted)] hover:bg-[color:var(--color-background)] hover:text-[color:var(--color-foreground)] transition-colors">
+      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-full h-7 w-7 flex items-center justify-center text-[color:var(--color-ink-muted)] hover:bg-[color:var(--color-cream)] hover:text-[color:var(--color-ink-strong)] transition-colors">
         <X className="h-4 w-4" />
         <span className="sr-only">Close</span>
       </DialogPrimitive.Close>
@@ -52,7 +52,7 @@ DialogContent.displayName = "DialogContent";
 export const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "border-b border-[color:var(--color-border)] px-5 py-4",
+      "border-b border-[color:var(--color-line)] px-6 py-5 bg-[color:var(--color-cream-soft)]",
       className
     )}
     {...props}
@@ -65,7 +65,7 @@ export const DialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cn("text-[14px] font-medium leading-tight text-[color:var(--color-foreground)]", className)}
+    className={cn("font-display text-[16px] font-semibold leading-tight text-[color:var(--color-ink-strong)]", className)}
     {...props}
   />
 ));
@@ -77,20 +77,20 @@ export const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn("mt-1 text-[12px] text-[color:var(--color-muted)]", className)}
+    className={cn("text-[12.5px] text-[color:var(--color-ink-muted)] leading-snug", className)}
     {...props}
   />
 ));
 DialogDescription.displayName = "DialogDescription";
 
 export const DialogBody = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("px-5 py-4", className)} {...props} />
+  <div className={cn("px-6 py-5 max-h-[70vh] overflow-y-auto", className)} {...props} />
 );
 
 export const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "flex justify-end gap-2 border-t border-[color:var(--color-border)] px-5 py-3",
+      "flex items-center justify-end gap-2 border-t border-[color:var(--color-line)] px-6 py-4 bg-[color:var(--color-cream-soft)]",
       className
     )}
     {...props}

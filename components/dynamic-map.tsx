@@ -7,7 +7,7 @@ export const CampusMapClient = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="rounded-lg border border-[color:var(--color-border)] bg-white h-[560px] flex items-center justify-center text-[12px] text-[color:var(--color-muted)]">
+      <div className="rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-paper)] h-[560px] flex items-center justify-center text-[12.5px] text-[color:var(--color-ink-muted)] font-display">
         Loading campus map…
       </div>
     ),

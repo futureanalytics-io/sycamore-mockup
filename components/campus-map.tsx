@@ -15,9 +15,10 @@ interface CampusMapProps {
   height?: number;
   showEditorToggle?: boolean;
   fullWidth?: boolean;
+  onSectionDoubleClick?: (sectionId: string) => void;
 }
 
-export function CampusMap({ height = 560, showEditorToggle = true, fullWidth = false }: CampusMapProps) {
+export function CampusMap({ height = 560, showEditorToggle = true, fullWidth = false, onSectionDoubleClick }: CampusMapProps) {
   const { buildings, selectedSectionId, selectSection, editMode, toggleEditMode } = usePortalStore();
 
   const bounds = useMemo<L.LatLngBoundsExpression>(
@@ -38,18 +39,18 @@ export function CampusMap({ height = 560, showEditorToggle = true, fullWidth = f
 
   return (
     <div
-      className={`relative rounded-lg border border-[color:var(--color-border)] bg-white overflow-hidden ${
+      className={`relative rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-paper)] overflow-hidden shadow-[0_1px_2px_rgba(17,32,37,0.04)] ${
         drawing ? "draw-cursor" : ""
       }`}
     >
       {/* Map header */}
-      <div className="absolute top-0 left-0 right-0 z-[400] flex items-center justify-between px-3 py-2 bg-gradient-to-b from-white/95 to-white/0 backdrop-blur-[2px] pointer-events-none">
+      <div className="absolute top-0 left-0 right-0 z-[400] flex items-center justify-between px-4 py-3 bg-gradient-to-b from-white/95 to-white/0 backdrop-blur-[2px] pointer-events-none">
         <div className="flex items-center gap-2 pointer-events-auto">
-          <div className="text-[12px] font-medium text-[color:var(--color-foreground)]">
+          <div className="font-display text-[13.5px] font-semibold text-[color:var(--color-ink-strong)]">
             University of Bradford — main campus
           </div>
-          <span className="text-[11px] text-[color:var(--color-muted)]">
-            {allSections.length} roof sections
+          <span className="text-[11.5px] text-[color:var(--color-ink-muted)]">
+            · {allSections.length} roof sections
           </span>
         </div>
         {showEditorToggle && (
@@ -79,9 +80,9 @@ export function CampusMap({ height = 560, showEditorToggle = true, fullWidth = f
       </div>
 
       {/* Legend */}
-      <div className="absolute bottom-3 left-3 z-[400] bg-white border border-[color:var(--color-border)] rounded-md px-2.5 py-1.5 flex items-center gap-3 shadow-sm">
+      <div className="absolute bottom-3 left-3 z-[400] bg-[color:var(--color-paper)] border border-[color:var(--color-line)] rounded-xl px-3 py-2 flex items-center gap-3.5 shadow-[0_4px_14px_-4px_rgba(17,32,37,0.15)]">
         {(["red", "amber", "green"] as const).map((rag) => (
-          <div key={rag} className="flex items-center gap-1.5 text-[11px] text-[color:var(--color-muted)]">
+          <div key={rag} className="flex items-center gap-1.5 text-[11px] text-[color:var(--color-ink-soft)] font-medium">
             <span
               className="inline-block h-2.5 w-2.5 rounded-sm"
               style={{
@@ -92,6 +93,10 @@ export function CampusMap({ height = 560, showEditorToggle = true, fullWidth = f
             <span>{RAG_COLORS[rag].label}</span>
           </div>
         ))}
+        <div className="h-3 w-px bg-[color:var(--color-line-strong)]" />
+        <div className="text-[11px] text-[color:var(--color-ink-muted)] flex items-center gap-1">
+          <span className="hidden sm:inline">Click section · hover for details</span>
+        </div>
       </div>
 
       <MapContainer
@@ -108,7 +113,7 @@ export function CampusMap({ height = 560, showEditorToggle = true, fullWidth = f
         style={{
           height: `${height}px`,
           width: fullWidth ? "100%" : "100%",
-          background: "#F7F7F4",
+          background: "var(--color-cream-edge)",
         }}
       >
         <ImageOverlay url="/campus-map.jpg" bounds={bounds} />
@@ -119,6 +124,7 @@ export function CampusMap({ height = 560, showEditorToggle = true, fullWidth = f
           )}
           selectedSectionId={selectedSectionId}
           onSelectSection={selectSection}
+          onSectionDoubleClick={onSectionDoubleClick}
           editMode={editMode}
         />
         <FitToBoundsOnMount bounds={bounds} />
@@ -157,6 +163,7 @@ interface SectionLayerProps {
   buildingNames: Record<string, string>;
   selectedSectionId: string | null;
   onSelectSection: (id: string | null) => void;
+  onSectionDoubleClick?: (id: string) => void;
   editMode: boolean;
 }
 
@@ -165,6 +172,7 @@ function SectionLayer({
   buildingNames,
   selectedSectionId,
   onSelectSection,
+  onSectionDoubleClick,
   editMode,
 }: SectionLayerProps) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
@@ -183,6 +191,10 @@ function SectionLayer({
             pathOptions={pathOptions}
             eventHandlers={{
               click: () => onSelectSection(section.id),
+              dblclick: () => {
+                onSelectSection(section.id);
+                onSectionDoubleClick?.(section.id);
+              },
               mouseover: () => setHoveredId(section.id),
               mouseout: () =>
                 setHoveredId((cur) => (cur === section.id ? null : cur)),
@@ -230,44 +242,47 @@ function HoverCardContent({
   buildingName: string;
 }) {
   const c = RAG_COLORS[section.rag];
+  const eyebrow = { fontSize: 9.5, color: "#9aa3aa", textTransform: "uppercase" as const, letterSpacing: "0.12em", fontWeight: 600, fontFamily: "var(--font-cairo)" };
+  const value = { fontSize: 12.5, color: "#1f1f1f", fontWeight: 500 };
   return (
-    <div style={{ minWidth: 200 }}>
+    <div style={{ minWidth: 230 }}>
       <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 8, marginBottom: 4 }}>
-        <div style={{ fontSize: 13, fontWeight: 500 }}>{section.id}</div>
+        <div style={{ fontFamily: "var(--font-cairo)", fontSize: 15, fontWeight: 600, color: "#377587" }}>{section.id}</div>
         <div
           style={{
-            fontSize: 10.5,
-            fontWeight: 500,
+            fontSize: 10,
+            fontWeight: 600,
             color: c.text,
             background: c.bg,
-            padding: "1px 6px",
+            padding: "2px 8px",
             borderRadius: 999,
+            fontFamily: "var(--font-cairo)",
           }}
         >
           {c.label}
         </div>
       </div>
-      <div style={{ fontSize: 11, color: "#6b6b66", marginBottom: 6 }}>{buildingName}</div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 4, fontSize: 11 }}>
+      <div style={{ fontSize: 11, color: "#6b7680", marginBottom: 10 }}>{buildingName}</div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, fontSize: 11 }}>
         <div>
-          <div style={{ color: "#9a9a93", fontSize: 10 }}>Area</div>
-          <div style={{ color: "#1a1a1a" }}>{formatArea(section.areaSqm)}</div>
+          <div style={eyebrow}>Area</div>
+          <div style={value}>{formatArea(section.areaSqm)}</div>
         </div>
         <div>
-          <div style={{ color: "#9a9a93", fontSize: 10 }}>Forecast</div>
-          <div style={{ color: "#1a1a1a" }}>{formatGbpFull(section.forecastCostGbp)}</div>
+          <div style={eyebrow}>Forecast</div>
+          <div style={value}>{formatGbpFull(section.forecastCostGbp)}</div>
         </div>
         <div>
-          <div style={{ color: "#9a9a93", fontSize: 10 }}>Type</div>
-          <div style={{ color: "#1a1a1a" }}>{section.roofType}</div>
+          <div style={eyebrow}>Type</div>
+          <div style={value}>{section.roofType}</div>
         </div>
         <div>
-          <div style={{ color: "#9a9a93", fontSize: 10 }}>Life left</div>
-          <div style={{ color: "#1a1a1a" }}>{section.lifeRemainingYears} yrs</div>
+          <div style={eyebrow}>Life left</div>
+          <div style={value}>{section.lifeRemainingYears} yrs</div>
         </div>
       </div>
-      <div style={{ marginTop: 6, fontSize: 10.5, color: "#9a9a93", borderTop: "0.5px solid rgba(0,0,0,0.08)", paddingTop: 4 }}>
-        Click to view & log audit
+      <div style={{ marginTop: 10, fontSize: 10.5, color: "#9aa3aa", borderTop: "0.5px solid rgba(17,32,37,0.08)", paddingTop: 6 }}>
+        Click section to edit or log an audit
       </div>
     </div>
   );

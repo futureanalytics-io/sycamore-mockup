@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowUpDown, Search } from "lucide-react";
+import { ArrowUpDown, Search, Building2 } from "lucide-react";
 import type { RagStatus } from "@/lib/types";
 
 type SortKey = "id" | "areaSqm" | "forecastCostGbp" | "lifeRemainingYears";
@@ -62,21 +62,32 @@ export function AssetsTable() {
   };
 
   return (
-    <div className="rounded-lg border border-[color:var(--color-border)] bg-white overflow-hidden">
-      <div className="flex items-center gap-2 px-4 py-2.5 border-b border-[color:var(--color-border)]">
-        <span className="text-[13px] font-medium mr-2">All sections</span>
-        <span className="text-[11px] text-[color:var(--color-muted)]">{rows.length} of {sections.length}</span>
+    <div className="rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-paper)] overflow-hidden">
+      <div className="flex items-center gap-3 px-5 py-3.5 border-b border-[color:var(--color-line)] bg-[color:var(--color-cream-soft)]">
+        <div className="flex items-center gap-2.5">
+          <div className="h-7 w-7 rounded-lg bg-[color:var(--color-eggplant-soft)] flex items-center justify-center">
+            <Building2 className="h-3.5 w-3.5 text-[color:var(--color-eggplant)]" />
+          </div>
+          <div>
+            <div className="font-display font-semibold text-[13.5px] text-[color:var(--color-ink-strong)]">
+              Roof asset register
+            </div>
+            <div className="text-[11px] text-[color:var(--color-ink-muted)]">
+              {rows.length} of {sections.length} sections
+            </div>
+          </div>
+        </div>
         <div className="flex-1" />
         <div className="relative">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[color:var(--color-muted)]" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[color:var(--color-ink-muted)]" />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search section, building, roof type…"
-            className="h-8 w-[260px] pl-7 pr-2 rounded-md border border-[color:var(--color-border-strong)] bg-white text-[12px] text-[color:var(--color-foreground)] placeholder:text-[color:var(--color-faint)] focus:outline-none focus:ring-1 focus:ring-[color:var(--color-sycamore)]/40"
+            className="h-9 w-[280px] pl-9 pr-3 rounded-lg border border-[color:var(--color-line-strong)] bg-[color:var(--color-paper)] text-[12.5px] text-[color:var(--color-ink-strong)] placeholder:text-[color:var(--color-ink-faint)] focus:outline-none focus:border-[color:var(--color-sycamore)]/50 focus:ring-2 focus:ring-[color:var(--color-sycamore)]/15 transition-colors"
           />
         </div>
-        <div className="w-[140px]">
+        <div className="w-[150px]">
           <Select value={filterRag} onValueChange={setFilterRag}>
             <SelectTrigger>
               <SelectValue />
@@ -92,14 +103,14 @@ export function AssetsTable() {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full text-[12px]">
+        <table className="w-full text-[12.5px]">
           <thead>
-            <tr className="text-[10.5px] uppercase tracking-wide text-[color:var(--color-muted)] bg-[color:var(--color-background)]/60">
+            <tr className="text-[10.5px] uppercase tracking-[0.12em] text-[color:var(--color-ink-muted)] bg-[color:var(--color-cream-soft)]/40 font-display font-semibold">
               <Th onClick={() => toggleSort("id")} active={sortKey === "id"}>
                 Section
               </Th>
-              <th className="text-left font-medium px-2 py-2">Building</th>
-              <th className="text-left font-medium px-2 py-2">Roof type</th>
+              <th className="text-left font-semibold px-2 py-2.5">Building</th>
+              <th className="text-left font-semibold px-2 py-2.5">Roof type</th>
               <Th onClick={() => toggleSort("areaSqm")} active={sortKey === "areaSqm"}>
                 Area
               </Th>
@@ -109,7 +120,7 @@ export function AssetsTable() {
               >
                 Forecast cost
               </Th>
-              <th className="text-left font-medium px-2 py-2">RAG</th>
+              <th className="text-left font-semibold px-2 py-2.5">RAG</th>
               <Th
                 onClick={() => toggleSort("lifeRemainingYears")}
                 active={sortKey === "lifeRemainingYears"}
@@ -122,20 +133,28 @@ export function AssetsTable() {
             {rows.map((s) => (
               <tr
                 key={s.id}
-                className="border-t border-[color:var(--color-border)] hover:bg-[color:var(--color-background)]/40 cursor-pointer transition-colors"
+                className="border-t border-[color:var(--color-line)] hover:bg-[color:var(--color-cream)] cursor-pointer transition-colors"
                 onClick={() => selectSection(s.id)}
               >
-                <td className="px-4 py-2 font-medium">{s.id}</td>
-                <td className="px-2 py-2 text-[color:var(--color-muted)]">
+                <td className="px-5 py-2.5 font-display font-semibold text-[color:var(--color-sycamore)]">
+                  {s.id}
+                </td>
+                <td className="px-2 py-2.5 text-[color:var(--color-ink-soft)]">
                   {buildingNameByCode[s.buildingCode] || s.buildingCode}
                 </td>
-                <td className="px-2 py-2 text-[color:var(--color-muted)]">{s.roofType}</td>
-                <td className="px-2 py-2 tabular-nums">{formatArea(s.areaSqm)}</td>
-                <td className="px-2 py-2 tabular-nums">{formatGbpFull(s.forecastCostGbp)}</td>
-                <td className="px-2 py-2">
+                <td className="px-2 py-2.5 text-[color:var(--color-ink-soft)]">{s.roofType}</td>
+                <td className="px-2 py-2.5 tabular-nums text-[color:var(--color-ink-strong)]">
+                  {formatArea(s.areaSqm)}
+                </td>
+                <td className="px-2 py-2.5 tabular-nums text-[color:var(--color-ink-strong)]">
+                  {formatGbpFull(s.forecastCostGbp)}
+                </td>
+                <td className="px-2 py-2.5">
                   <RagBadge rag={s.rag} size="sm" />
                 </td>
-                <td className="px-2 py-2 tabular-nums">{s.lifeRemainingYears} yrs</td>
+                <td className="px-2 py-2.5 tabular-nums text-[color:var(--color-ink-soft)]">
+                  {s.lifeRemainingYears} yrs
+                </td>
               </tr>
             ))}
           </tbody>
@@ -157,8 +176,8 @@ function Th({
   return (
     <th
       onClick={onClick}
-      className={`text-left font-medium px-2 py-2 cursor-pointer select-none ${
-        active ? "text-[color:var(--color-foreground)]" : ""
+      className={`text-left font-semibold px-5 py-2.5 cursor-pointer select-none ${
+        active ? "text-[color:var(--color-sycamore)]" : ""
       }`}
     >
       <span className="inline-flex items-center gap-1">
