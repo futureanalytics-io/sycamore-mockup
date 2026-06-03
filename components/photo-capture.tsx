@@ -25,6 +25,7 @@ export function PhotoCapture({
   variant?: "audit" | "edit";
 }) {
   const fileRef = useRef<HTMLInputElement>(null);
+  const cameraRef = useRef<HTMLInputElement>(null);
   const isEdit = variant === "edit";
 
   const notifyDemo = (action: string) =>
@@ -35,7 +36,7 @@ export function PhotoCapture({
 
   return (
     <div className="space-y-2.5">
-      {/* The file input is intentionally inert in the demo: selecting a file
+      {/* The file inputs are intentionally inert in the demo: selecting a file
           just surfaces the demo note rather than processing/storing it. */}
       <input
         ref={fileRef}
@@ -46,6 +47,20 @@ export function PhotoCapture({
           e.preventDefault();
           if (fileRef.current) fileRef.current.value = "";
           notifyDemo("Upload");
+        }}
+      />
+      {/* capture="environment" opens the rear camera directly on mobile
+          devices; on desktop browsers it falls back to a file picker. */}
+      <input
+        ref={cameraRef}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        className="hidden"
+        onChange={(e) => {
+          e.preventDefault();
+          if (cameraRef.current) cameraRef.current.value = "";
+          notifyDemo("Take photo");
         }}
       />
 
@@ -76,11 +91,12 @@ export function PhotoCapture({
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <Button size="sm" onClick={() => notifyDemo("Take photo")}>
+        <div className="flex w-full items-center justify-center gap-2">
+          {/* Opens the device camera on mobile via the capture input. */}
+          <Button size="sm" className="flex-1 sm:flex-none" onClick={() => cameraRef.current?.click()}>
             <Camera className="h-3 w-3" /> {isEdit ? "Take new" : "Take photo"}
           </Button>
-          <Button size="sm" variant="outline" onClick={() => fileRef.current?.click()}>
+          <Button size="sm" variant="outline" className="flex-1 sm:flex-none" onClick={() => fileRef.current?.click()}>
             <Upload className="h-3 w-3" /> Upload
           </Button>
         </div>

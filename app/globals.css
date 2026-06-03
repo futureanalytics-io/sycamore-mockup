@@ -63,12 +63,12 @@
 }
 
 /* NOTE: font families are intentionally NOT declared in @theme. next/font
-   injects --font-display (Montserrat) and --font-body (Roboto) directly onto
+   injects --font-display and --font-body (both Poppins) directly onto
    <body> at runtime; @theme would inline an empty value at build time and
    fall the whole UI back to a serif. We build full stacks here from those
    runtime vars + a system fallback, and consume the stacks everywhere. */
 /* font-display / font-body utilities (used as classes throughout the app).
-   next/font injects --font-display (Montserrat) / --font-body (Roboto) onto
+   next/font injects --font-display / --font-body (both Poppins) onto
    <body>, so we reference those vars directly with an inline system fallback.
    We deliberately avoid an intermediate --stack-* var: Tailwind hoists bare
    custom-property declarations to :root, where --font-* is out of scope and
@@ -106,20 +106,21 @@ body {
 h1, h2, h3, h4, h5, h6,
 .font-display {
   font-family: var(--font-display), "Segoe UI", system-ui, -apple-system, sans-serif;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-ink-strong);
-  line-height: 1.12;
-  /* Montserrat is geometric — a small negative track keeps headings tight
-     and modern without the wide, dated feel. */
-  letter-spacing: -0.018em;
+  line-height: 1.16;
+  /* Poppins is wide and geometric — keep tracking near zero so headings
+     read clean and open like the brand reference (a tight negative track
+     makes Poppins look cramped). */
+  letter-spacing: -0.005em;
 }
 
 /* Section title: gradient teal left-border accent */
 .brand-title {
   font-family: var(--font-display), "Segoe UI", system-ui, -apple-system, sans-serif;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--color-ink-strong);
-  letter-spacing: -0.022em;
+  letter-spacing: -0.01em;
   display: inline-flex;
   align-items: center;
   padding-left: 14px;
@@ -295,6 +296,15 @@ select {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(17, 32, 37, 0.12); border-radius: 10px; border: 2px solid var(--color-cream); }
 ::-webkit-scrollbar-thumb:hover { background: rgba(17, 32, 37, 0.22); }
+
+/* Hide scrollbar but keep scrolling (used by the mobile tab strip) */
+@utility no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
 
 /* Sonner branding */
 [data-sonner-toaster] [data-sonner-toast] {

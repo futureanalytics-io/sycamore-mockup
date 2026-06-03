@@ -38,7 +38,7 @@ export function AuditLog({ compact = false, limit }: AuditLogProps) {
 
   return (
     <div className="rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-paper)] overflow-hidden">
-      <div className="flex items-center justify-between px-5 py-3.5 border-b border-[color:var(--color-line)] bg-[color:var(--color-cream-soft)]">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 sm:px-5 py-3.5 border-b border-[color:var(--color-line)] bg-[color:var(--color-cream-soft)]">
         <div className="flex items-center gap-2.5">
           <div className="h-7 w-7 rounded-lg bg-[color:var(--color-sycamore-soft)] flex items-center justify-center">
             <ClipboardCheck className="h-3.5 w-3.5 text-[color:var(--color-sycamore)]" />
@@ -53,8 +53,8 @@ export function AuditLog({ compact = false, limit }: AuditLogProps) {
           </div>
         </div>
         {!compact && (
-          <div className="flex items-center gap-2">
-            <div className="w-[200px]">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <div className="flex-1 sm:flex-none sm:w-[200px]">
               <Select value={filterBuilding} onValueChange={setFilterBuilding}>
                 <SelectTrigger>
                   <SelectValue />
@@ -69,7 +69,7 @@ export function AuditLog({ compact = false, limit }: AuditLogProps) {
                 </SelectContent>
               </Select>
             </div>
-            <div className="w-[140px]">
+            <div className="w-[110px] sm:w-[140px] shrink-0">
               <Select value={filterRag} onValueChange={setFilterRag}>
                 <SelectTrigger>
                   <SelectValue />
@@ -87,7 +87,7 @@ export function AuditLog({ compact = false, limit }: AuditLogProps) {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full text-[12.5px]">
+        <table className="w-full min-w-[620px] text-[12.5px]">
           <thead>
             <tr className="text-[10.5px] uppercase tracking-[0.12em] text-[color:var(--color-ink-muted)] bg-[color:var(--color-cream-soft)]/40 font-display font-semibold">
               <th className="text-left font-semibold px-5 py-2.5">Date</th>

@@ -34,7 +34,7 @@ export const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed left-1/2 top-1/2 z-[1101] w-full max-w-[560px] -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-paper)] p-0 shadow-[0_30px_60px_-20px_rgba(17,32,37,0.35),0_2px_6px_rgba(17,32,37,0.08)] focus:outline-none overflow-hidden",
+        "fixed left-1/2 top-1/2 z-[1101] w-[calc(100vw-2rem)] max-w-[560px] max-h-[calc(100dvh-2rem)] flex flex-col -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-paper)] p-0 shadow-[0_30px_60px_-20px_rgba(17,32,37,0.35),0_2px_6px_rgba(17,32,37,0.08)] focus:outline-none overflow-hidden",
         className
       )}
       {...props}
@@ -52,7 +52,7 @@ DialogContent.displayName = "DialogContent";
 export const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "border-b border-[color:var(--color-line)] px-6 py-5 bg-[color:var(--color-cream-soft)]",
+      "shrink-0 border-b border-[color:var(--color-line)] px-5 py-4 sm:px-6 sm:py-5 bg-[color:var(--color-cream-soft)]",
       className
     )}
     {...props}
@@ -84,13 +84,15 @@ export const DialogDescription = React.forwardRef<
 DialogDescription.displayName = "DialogDescription";
 
 export const DialogBody = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("px-6 py-5 max-h-[70vh] overflow-y-auto", className)} {...props} />
+  // flex-1 + min-h-0 lets the body scroll within the dialog's max-height while
+  // the header and footer stay pinned — critical on short mobile viewports.
+  <div className={cn("flex-1 min-h-0 overflow-y-auto px-5 py-5 sm:px-6", className)} {...props} />
 );
 
 export const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "flex items-center justify-end gap-2 border-t border-[color:var(--color-line)] px-6 py-4 bg-[color:var(--color-cream-soft)]",
+      "flex flex-wrap items-center justify-end gap-2 border-t border-[color:var(--color-line)] px-5 py-3.5 sm:px-6 sm:py-4 bg-[color:var(--color-cream-soft)]",
       className
     )}
     {...props}

@@ -259,7 +259,7 @@ export function SectionEditor({ open, onOpenChange, sectionId, mode }: SectionEd
 
           {!isAudit && (
             <>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Field label="Roof area (m²)" eyebrow>
                   <NumberInput
                     value={areaSqm}

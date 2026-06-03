@@ -1,9 +1,42 @@
 "use client";
 
 import { create } from "zustand";
-import type { AuditEntry, Building, RagStatus, RoofSection, RoofType } from "./types";
+import type { AuditEntry, Building, RagStatus, RoofPhoto, RoofSection, RoofType } from "./types";
 import { seedBuildings } from "./buildings-seed";
 import { seedAudits } from "./audits-seed";
+
+const STORAGE_KEY = "sycamore-portal-state-v1";
+
+interface PersistedState {
+  buildings: Building[];
+  auditLog: AuditEntry[];
+}
+
+function loadPersisted(): PersistedState | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as PersistedState;
+    if (!parsed.buildings || !parsed.auditLog) return null;
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+function persist(state: PersistedState) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ buildings: state.buildings, auditLog: state.auditLog })
+    );
+  } catch {
+    // Quota exceeded (large base64 photos) or storage disabled — fail silently
+    // so the in-memory experience keeps working.
+  }
+}
 
 interface SubmitAuditPayload {
   sectionId: string;
@@ -40,9 +73,12 @@ interface PortalState {
   updateSection: (payload: UpdateSectionPayload) => AuditEntry | null;
   updatePolygon: (sectionId: string, polygon: [number, number][]) => void;
   addPolygon: (buildingCode: string, sectionId: string, polygon: [number, number][]) => void;
+  addPhoto: (sectionId: string, photo: { dataUrl: string; caption: string; auditor?: string }) => void;
+  removePhoto: (sectionId: string, photoId: string) => void;
   exportSeed: () => string;
   resetSeed: () => void;
   replaceBuildings: (buildings: Building[]) => void;
+  hydrate: () => void;
 }
 
 function findSection(
@@ -231,6 +267,7 @@ export const usePortalStore = create<PortalState>((set, get) => ({
         roofType: "Single-ply membrane",
         polygon,
         labelPosition: centroid(polygon),
+        photos: [],
       };
 
       if (existingBuilding) {
@@ -250,12 +287,50 @@ export const usePortalStore = create<PortalState>((set, get) => ({
     });
   },
 
+  addPhoto: (sectionId, { dataUrl, caption, auditor }) => {
+    const photo: RoofPhoto = {
+      id: `p-${Date.now()}`,
+      dataUrl,
+      caption: caption.trim() || "Site photo",
+      timestamp: new Date().toISOString(),
+      auditor: auditor || "Alex Bradford",
+    };
+    set((state) => ({
+      buildings: state.buildings.map((b) => ({
+        ...b,
+        sections: b.sections.map((s) =>
+          s.id !== sectionId ? s : { ...s, photos: [photo, ...s.photos] }
+        ),
+      })),
+    }));
+  },
+
+  removePhoto: (sectionId, photoId) => {
+    set((state) => ({
+      buildings: state.buildings.map((b) => ({
+        ...b,
+        sections: b.sections.map((s) =>
+          s.id !== sectionId
+            ? s
+            : { ...s, photos: s.photos.filter((p) => p.id !== photoId) }
+        ),
+      })),
+    }));
+  },
+
   exportSeed: () => {
     const state = get();
     return JSON.stringify(state.buildings, null, 2);
   },
 
   resetSeed: () => {
+    if (typeof window !== "undefined") {
+      try {
+        window.localStorage.removeItem(STORAGE_KEY);
+      } catch {
+        /* ignore */
+      }
+    }
     set({
       buildings: seedBuildings,
       auditLog: seedAudits,
@@ -265,7 +340,31 @@ export const usePortalStore = create<PortalState>((set, get) => ({
   },
 
   replaceBuildings: (buildings) => set({ buildings }),
+
+  // Load persisted state from localStorage. Called once on the client after
+  // mount so server and first client render stay identical (no hydration
+  // mismatch); the persisted data then patches in.
+  hydrate: () => {
+    const persisted = loadPersisted();
+    if (persisted) {
+      set({ buildings: persisted.buildings, auditLog: persisted.auditLog });
+    }
+  },
 }));
+
+// Persist any change to buildings or audit log. Selection / edit-mode toggles
+// don't touch persisted fields, so this only writes when real data changes.
+if (typeof window !== "undefined") {
+  let prevBuildings = usePortalStore.getState().buildings;
+  let prevAuditLog = usePortalStore.getState().auditLog;
+  usePortalStore.subscribe((state) => {
+    if (state.buildings !== prevBuildings || state.auditLog !== prevAuditLog) {
+      prevBuildings = state.buildings;
+      prevAuditLog = state.auditLog;
+      persist({ buildings: state.buildings, auditLog: state.auditLog });
+    }
+  });
+}
 
 // Derived selectors
 export const selectAllSections = (state: PortalState): RoofSection[] =>

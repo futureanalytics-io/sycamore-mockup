@@ -6,7 +6,7 @@ import { RagBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ConditionChart } from "@/components/condition-chart";
 import { formatGbpFull, formatArea, RAG_COLORS } from "@/lib/rag";
-import { ClipboardCheck, MapPin, Pencil, ArrowRight, History } from "lucide-react";
+import { ClipboardCheck, MapPin, Pencil, ArrowRight, History, Camera } from "lucide-react";
 
 interface BuildingDetailProps {
   onOpenEditor: (mode: "audit" | "edit") => void;
@@ -31,7 +31,7 @@ export function BuildingDetail({ onOpenEditor }: BuildingDetailProps) {
 
   if (!selected) {
     return (
-      <div className="rounded-2xl border border-dashed border-[color:var(--color-line-strong)] bg-[color:var(--color-cream-soft)]/60 h-full min-h-[560px] flex flex-col items-center justify-center text-center px-8 py-10">
+      <div className="rounded-2xl border border-dashed border-[color:var(--color-line-strong)] bg-[color:var(--color-cream-soft)]/60 h-full min-h-[260px] xl:min-h-[560px] flex flex-col items-center justify-center text-center px-6 py-8 sm:px-8 sm:py-10">
         <div className="h-12 w-12 rounded-full bg-[color:var(--color-sycamore-soft)] flex items-center justify-center mb-4">
           <MapPin className="h-5 w-5 text-[color:var(--color-sycamore)]" />
         </div>
@@ -137,6 +137,30 @@ export function BuildingDetail({ onOpenEditor }: BuildingDetailProps) {
           </div>
         )}
       </div>
+
+      {/* Site photos */}
+      {section.photos.length > 0 && (
+        <div className="px-5 py-4 border-b border-[color:var(--color-line)]">
+          <div className="text-[11px] uppercase tracking-[0.16em] font-display font-semibold text-[color:var(--color-ink-muted)] mb-2.5 flex items-center gap-1.5">
+            <Camera className="h-3 w-3" /> Site photos
+            <span className="ml-auto tabular-nums normal-case tracking-normal font-body text-[color:var(--color-ink-faint)]">
+              {section.photos.length}
+            </span>
+          </div>
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {section.photos.map((p) => (
+              <div
+                key={p.id}
+                className="h-16 w-16 shrink-0 rounded-lg overflow-hidden border border-[color:var(--color-line)] bg-[color:var(--color-cream)]"
+                title={`${p.caption} — ${p.auditor}`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={p.dataUrl} alt={p.caption} className="h-full w-full object-cover" />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* CTAs */}
       <div className="px-5 py-4 flex gap-2">

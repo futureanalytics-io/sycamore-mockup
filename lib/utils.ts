@@ -5,5 +5,8 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const IMAGE_WIDTH = 1480;
-export const IMAGE_HEIGHT = 788;
+// Dimensions of public/campus-map.jpg (University of Bradford roof PPM drawing,
+// cropped from the Appendix 4 campus PDF). Polygon coordinates in the seed are
+// expressed in this pixel space.
+export const IMAGE_WIDTH = 2480;
+export const IMAGE_HEIGHT = 2237;

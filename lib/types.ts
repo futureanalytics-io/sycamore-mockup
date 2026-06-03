@@ -10,6 +10,16 @@ export type RoofType =
   | "EPDM rubber"
   | "Green roof";
 
+export interface RoofPhoto {
+  id: string;
+  /** Data URL (base64). Demo build persists photos in localStorage. */
+  dataUrl: string;
+  caption: string;
+  /** ISO timestamp the photo was captured/uploaded. */
+  timestamp: string;
+  auditor: string;
+}
+
 export interface RoofSection {
   id: string;
   buildingCode: string;
@@ -21,6 +31,7 @@ export interface RoofSection {
   roofType: RoofType;
   polygon: [number, number][];
   labelPosition: [number, number];
+  photos: RoofPhoto[];
 }
 
 export interface Building {

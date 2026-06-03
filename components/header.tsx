@@ -9,7 +9,7 @@ export function Header() {
     <header className="sticky top-0 z-[500] border-b border-[color:var(--color-line)] bg-[color:var(--color-paper)]/85 backdrop-blur-md supports-[backdrop-filter]:bg-[color:var(--color-paper)]/75 shadow-[0_4px_18px_-12px_rgba(20,36,43,0.30)]">
       {/* thin brand gradient hairline */}
       <div className="h-[3px] w-full" style={{ background: "var(--gradient-brand)" }} />
-      <div className="h-[68px] flex items-center px-7 gap-7">
+      <div className="h-[60px] sm:h-[68px] flex items-center pl-3 pr-2.5 sm:px-7 gap-2 sm:gap-7">
         {/* Sycamore Square real logo */}
         <Link href="/" className="flex items-center">
           <Image
@@ -18,7 +18,7 @@ export function Header() {
             width={172}
             height={48}
             priority
-            className="h-10 w-auto"
+            className="h-8 sm:h-10 w-auto"
           />
         </Link>
 
@@ -53,7 +53,7 @@ export function Header() {
         </div>
 
         {/* Right side actions */}
-        <div className="flex items-center gap-2 lg:ml-3">
+        <div className="flex items-center gap-0.5 sm:gap-2 ml-auto lg:ml-3">
           <button className="h-9 w-9 rounded-full hover:bg-[color:var(--color-cream)] text-[color:var(--color-ink-muted)] flex items-center justify-center transition-colors">
             <Search className="h-4 w-4" />
           </button>
@@ -62,7 +62,10 @@ export function Header() {
             <span className="absolute top-2 right-2 h-1.5 w-1.5 rounded-full bg-[color:var(--color-accent-red)]" />
           </button>
 
-          <div className="flex items-center gap-2.5 pl-2 pr-1 py-1 rounded-full hover:bg-[color:var(--color-cream)] cursor-pointer transition-colors">
+          {/* slim divider before the user chip, from sm up */}
+          <div className="hidden sm:block h-6 w-px bg-[color:var(--color-line-strong)] mx-1" />
+
+          <div className="flex items-center gap-2.5 ml-1 sm:ml-0 pl-1 sm:pl-2 pr-1 py-1 rounded-full hover:bg-[color:var(--color-cream)] cursor-pointer transition-colors">
             <div className="leading-tight text-right hidden md:block">
               <div className="text-[12.5px] font-medium text-[color:var(--color-ink-strong)]">
                 Alex Bradford
@@ -75,7 +78,8 @@ export function Header() {
             >
               AB
             </div>
-            <ChevronDown className="h-3.5 w-3.5 text-[color:var(--color-ink-muted)]" />
+            {/* chevron only alongside the name (md+); orphaned on mobile otherwise */}
+            <ChevronDown className="hidden md:block h-3.5 w-3.5 text-[color:var(--color-ink-muted)]" />
           </div>
         </div>
       </div>
