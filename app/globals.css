@@ -152,6 +152,11 @@ select {
   background: var(--color-cream-edge) !important;
   font-family: var(--font-body);
   outline: none;
+  /* Confine Leaflet's internal panes/controls (z-index up to 1000) to the
+     map's own stacking context so they can never paint over body-level
+     portals such as the section-editor dialog (z-[1100]). */
+  position: relative;
+  z-index: 0;
 }
 .leaflet-container a {
   color: var(--color-sycamore);
