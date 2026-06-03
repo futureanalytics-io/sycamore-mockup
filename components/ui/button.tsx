@@ -6,16 +6,16 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-[13px] font-medium font-display transition-all disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-sycamore)]/40 [&_svg]:size-3.5 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-[13px] font-semibold font-display transition-all duration-200 disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-sycamore)]/40 focus-visible:ring-offset-1 [&_svg]:size-3.5 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default:
-          "bg-[color:var(--color-sycamore)] text-white hover:bg-[color:var(--color-sycamore-strong)] shadow-[0_1px_0_rgba(17,32,37,0.08),0_4px_12px_-4px_rgba(55,117,135,0.5)]",
+          "bg-[image:var(--gradient-brand)] bg-[length:140%_140%] bg-[position:0%_0%] text-white shadow-[0_2px_6px_-1px_rgba(35,95,112,0.45),0_6px_18px_-6px_rgba(31,182,214,0.5)] hover:bg-[position:100%_100%] hover:shadow-[0_3px_10px_-1px_rgba(35,95,112,0.5),0_10px_26px_-8px_rgba(31,182,214,0.6)] hover:-translate-y-px active:translate-y-0",
         outline:
-          "border border-[color:var(--color-line-strong)] bg-[color:var(--color-paper)] text-[color:var(--color-ink-strong)] hover:border-[color:var(--color-sycamore)]/40 hover:text-[color:var(--color-sycamore)]",
+          "border border-[color:var(--color-line-strong)] bg-[color:var(--color-paper)] text-[color:var(--color-ink-strong)] hover:border-[color:var(--color-sycamore)]/50 hover:text-[color:var(--color-sycamore)] hover:bg-[color:var(--color-sycamore-tint)]",
         ghost:
-          "text-[color:var(--color-ink-soft)] hover:bg-[color:var(--color-cream)] hover:text-[color:var(--color-ink-strong)]",
+          "text-[color:var(--color-ink-soft)] hover:bg-[color:var(--color-cream-edge)] hover:text-[color:var(--color-ink-strong)]",
         soft:
           "bg-[color:var(--color-sycamore-soft)] text-[color:var(--color-sycamore-strong)] hover:bg-[color:var(--color-sycamore-tint)]",
         eggplant:

@@ -8,7 +8,7 @@ export const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDi
     <div
       ref={ref}
       className={cn(
-        "rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-paper)] shadow-[0_1px_2px_rgba(17,32,37,0.04)]",
+        "rounded-xl border border-[color:var(--color-line)] bg-[color:var(--color-paper)] shadow-[var(--shadow-sm)] transition-shadow duration-200 hover:shadow-[var(--shadow-md)]",
         className
       )}
       {...props}
@@ -24,7 +24,7 @@ export const CardHeader = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "border-b border-[color:var(--color-line)] px-5 py-4 flex items-center justify-between gap-3",
+      "border-b border-[color:var(--color-line)] px-5 py-4 flex items-center justify-between gap-3 rounded-t-xl bg-gradient-to-b from-[color:var(--color-sycamore-tint)]/60 to-transparent",
       className
     )}
     {...props}

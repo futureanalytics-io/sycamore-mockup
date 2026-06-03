@@ -12,7 +12,10 @@ export const TabsList = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.List
     ref={ref}
-    className={cn("inline-flex h-12 items-end gap-7", className)}
+    className={cn(
+      "inline-flex items-center gap-1 rounded-full border border-[color:var(--color-line)] bg-[color:var(--color-cream-edge)]/60 p-1 my-2.5 shadow-[inset_0_1px_2px_rgba(20,36,43,0.05)]",
+      className
+    )}
     {...props}
   />
 ));
@@ -25,7 +28,7 @@ export const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "relative h-12 inline-flex items-center gap-2 text-[13.5px] font-display font-semibold text-[color:var(--color-ink-muted)] hover:text-[color:var(--color-ink-strong)] transition-colors data-[state=active]:text-[color:var(--color-sycamore)] focus:outline-none after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2.5px] after:bg-transparent data-[state=active]:after:bg-[color:var(--color-sycamore)]",
+      "relative inline-flex h-9 items-center gap-2 rounded-full px-4 text-[13px] font-body font-medium text-[color:var(--color-ink-muted)] transition-all duration-200 hover:text-[color:var(--color-ink-strong)] focus:outline-none data-[state=active]:bg-gradient-to-b data-[state=active]:from-white data-[state=active]:to-[color:var(--color-sycamore-tint)] data-[state=active]:text-[color:var(--color-sycamore-strong)] data-[state=active]:font-bold data-[state=active]:shadow-[0_1px_3px_rgba(20,36,43,0.12),0_3px_10px_-3px_rgba(47,125,146,0.30)] data-[state=active]:ring-1 data-[state=active]:ring-[color:var(--color-sycamore)]/15",
       className
     )}
     {...props}

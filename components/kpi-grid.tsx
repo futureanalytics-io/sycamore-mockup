@@ -16,31 +16,46 @@ interface KpiTileProps {
 }
 
 function KpiTile({ label, value, caption, accent, swatch, icon, spark }: KpiTileProps) {
+  // Top accent bar: RAG swatch colour for status tiles, brand gradient otherwise.
+  const barBg = swatch ?? undefined;
   return (
-    <div className="rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-paper)] px-5 py-4 flex flex-col gap-2 min-w-0 hover:shadow-[0_4px_18px_rgba(17,32,37,0.07)] transition-shadow">
-      <div className="flex items-center gap-2 text-[11.5px] text-[color:var(--color-ink-muted)] font-display font-semibold uppercase tracking-[0.12em]">
+    <div className="group relative overflow-hidden rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-paper)] px-5 pt-5 pb-4 flex flex-col gap-2.5 min-w-0 shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-md)] hover:-translate-y-1 transition-all duration-200">
+      {/* faint colour wash that intensifies on hover for a livelier feel */}
+      <span
+        className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+        style={{
+          background: barBg
+            ? `radial-gradient(120% 120% at 100% 0%, ${barBg}1f 0%, transparent 60%)`
+            : "radial-gradient(120% 120% at 100% 0%, rgba(31,182,214,0.10) 0%, transparent 60%)",
+        }}
+      />
+      <span
+        className="absolute inset-x-0 top-0 h-1"
+        style={barBg ? { background: barBg } : { backgroundImage: "var(--gradient-brand-vivid)" }}
+      />
+      <div className="flex items-center gap-1.5 text-[10.5px] text-[color:var(--color-ink-muted)] font-body font-semibold uppercase tracking-[0.08em]">
         {swatch && (
           <span
-            className="inline-block h-2.5 w-2.5 rounded-sm shadow-inner"
+            className="inline-block h-2 w-2 rounded-full"
             style={{ backgroundColor: swatch }}
           />
         )}
-        {icon}
+        {icon && <span className="text-[color:var(--color-sycamore)] opacity-80">{icon}</span>}
         <span className="truncate">{label}</span>
       </div>
       <div
-        className="font-display text-[28px] font-semibold leading-none tabular-nums"
+        className="font-display text-[31px] font-bold leading-none tabular-nums tracking-[-0.03em]"
         style={{ color: accent || "var(--color-ink-strong)" }}
       >
         {value}
       </div>
       {caption && (
-        <div className="text-[11.5px] text-[color:var(--color-ink-muted)] flex items-center gap-1.5">
+        <div className="text-[11px] text-[color:var(--color-ink-muted)] flex items-center gap-1.5">
           {typeof spark === "number" && (
             <span
-              className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md text-[10.5px] font-medium"
+              className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-medium"
               style={{
-                background: spark >= 0 ? "rgba(118,161,96,0.14)" : "rgba(226,94,68,0.14)",
+                background: spark >= 0 ? "rgba(118,161,96,0.12)" : "rgba(226,94,68,0.12)",
                 color: spark >= 0 ? "#426D30" : "#A73A25",
               }}
             >

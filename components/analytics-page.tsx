@@ -34,8 +34,8 @@ const TYPE_COLORS: Record<string, string> = {
 
 const RAG_KEYS: RagStatus[] = ["red", "amber", "green"];
 
-const AXIS_TICK = { fontSize: 11, fill: "#404D55", fontFamily: "var(--font-nunito)" } as const;
-const AXIS_LABEL = { fontSize: 11, fill: "#6b7680", fontFamily: "var(--font-nunito)" } as const;
+const AXIS_TICK = { fontSize: 11, fill: "#404D55", fontFamily: "var(--font-body)" } as const;
+const AXIS_LABEL = { fontSize: 11, fill: "#6b7680", fontFamily: "var(--font-body)" } as const;
 
 const tooltipStyle = {
   background: "#ffffff",
@@ -43,7 +43,7 @@ const tooltipStyle = {
   borderRadius: 10,
   boxShadow: "0 8px 24px rgba(17,32,37,0.12)",
   fontSize: 12,
-  fontFamily: "var(--font-nunito)",
+  fontFamily: "var(--font-body)",
   padding: "8px 10px",
 } as const;
 
@@ -334,7 +334,7 @@ export function AnalyticsPage() {
                       style={{
                         fontSize: 10.5,
                         fill: "#404D55",
-                        fontFamily: "var(--font-nunito)",
+                        fontFamily: "var(--font-body)",
                       }}
                     />
                   </Bar>
@@ -368,7 +368,7 @@ export function AnalyticsPage() {
                 <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "rgba(17,32,37,0.04)" }} formatter={((v: unknown) => formatGbp(Number(v))) as never} />
                 <Legend
                   iconType="circle"
-                  wrapperStyle={{ fontSize: 11, fontFamily: "var(--font-nunito)", color: "#404D55", paddingTop: 8 }}
+                  wrapperStyle={{ fontSize: 11, fontFamily: "var(--font-body)", color: "#404D55", paddingTop: 8 }}
                 />
                 <Bar dataKey="red" name="Red" stackId="rag" fill={RAG_COLORS.red.fill} />
                 <Bar dataKey="amber" name="Amber" stackId="rag" fill={RAG_COLORS.amber.fill} />

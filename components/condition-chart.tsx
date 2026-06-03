@@ -36,7 +36,7 @@ export function ConditionChart({ building }: ConditionChartProps) {
             width={52}
             axisLine={false}
             tickLine={false}
-            tick={{ fontSize: 11, fill: "#6b6b66", fontFamily: "var(--font-inter)" }}
+            tick={{ fontSize: 11, fill: "#6b6b66", fontFamily: "var(--font-body)" }}
           />
           <Bar dataKey="count" radius={[2, 2, 2, 2]} maxBarSize={16}>
             {data.map((d) => (
@@ -45,7 +45,7 @@ export function ConditionChart({ building }: ConditionChartProps) {
             <LabelList
               dataKey="count"
               position="right"
-              style={{ fontSize: 11, fill: "#1a1a1a", fontFamily: "var(--font-inter)" }}
+              style={{ fontSize: 11, fill: "#1a1a1a", fontFamily: "var(--font-body)" }}
             />
           </Bar>
         </BarChart>

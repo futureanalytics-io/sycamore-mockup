@@ -1,19 +1,21 @@
 import type { Metadata } from "next";
-import { Cairo, Nunito_Sans } from "next/font/google";
+import { Montserrat, Roboto } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
 
-const cairo = Cairo({
-  variable: "--font-cairo",
+// Display / headings — modern geometric sans with punchy bold weights
+const montserrat = Montserrat({
+  variable: "--font-display",
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: ["500", "600", "700", "800"],
   display: "swap",
 });
 
-const nunito = Nunito_Sans({
-  variable: "--font-nunito",
+// Body / UI — clean, highly legible at data-dense sizes
+const roboto = Roboto({
+  variable: "--font-body",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "700"],
   display: "swap",
 });
 
@@ -28,13 +30,13 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={`${cairo.variable} ${nunito.variable} antialiased`}>
+      <body className={`${montserrat.variable} ${roboto.variable} antialiased`}>
         {children}
         <Toaster
           position="bottom-right"
           toastOptions={{
             style: {
-              fontFamily: "var(--font-nunito)",
+              fontFamily: "var(--font-body)",
               fontSize: "13px",
               padding: "12px 16px",
             },

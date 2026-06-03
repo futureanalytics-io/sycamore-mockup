@@ -2,61 +2,101 @@
 @import "leaflet/dist/leaflet.css";
 
 /*
- * Brand tokens lifted directly from sycamoresquaregroup.co.uk
- * Headings: Cairo 600 · Body: Nunito Sans 400
- * Primary teal #377587 · Eggplant #544862 · Cream #F9F9EF
+ * Brand tokens — sycamoresquaregroup.co.uk, refreshed for a modern feel.
+ * Display: Plus Jakarta Sans · Body: Inter
+ * Primary teal #2f7d92 · Cyan lift #1fb6d6 · Eggplant #5a4d6b
+ * Surfaces moved off beige onto a cool, crisp off-white.
  */
 @theme {
-  --color-cream: #f9f9ef;
-  --color-cream-soft: #fefef6;
-  --color-cream-edge: #efeee0;
+  /* Surfaces — cool, crisp, slightly tinted toward teal */
+  --color-cream: #f4f7f8;          /* app background */
+  --color-cream-soft: #fbfcfd;
+  --color-cream-edge: #e8eef0;
   --color-paper: #ffffff;
 
-  --color-ink: #333333;
-  --color-ink-strong: #1f1f1f;
-  --color-ink-soft: #404d55;
-  --color-ink-muted: #6b7680;
-  --color-ink-faint: #afafaf;
+  --color-ink: #2b3338;
+  --color-ink-strong: #14242b;
+  --color-ink-soft: #3a4a52;
+  --color-ink-muted: #6b7880;
+  --color-ink-faint: #aab4ba;
 
-  --color-sycamore: #377587;
-  --color-sycamore-strong: #2c5f6f;
-  --color-sycamore-soft: #e2eff2;
-  --color-sycamore-tint: #f3f8f9;
+  /* Primary teal — a touch richer + a lively cyan partner for gradients */
+  --color-sycamore: #2f7d92;
+  --color-sycamore-strong: #235f70;
+  --color-sycamore-bright: #1fb6d6;
+  --color-sycamore-soft: #dceef2;
+  --color-sycamore-tint: #eef7f9;
 
-  --color-eggplant: #544862;
-  --color-eggplant-soft: #e5e1eb;
-  --color-navy: #112025;
+  --color-eggplant: #5a4d6b;
+  --color-eggplant-soft: #ebe7f0;
+  --color-navy: #0e1c22;
 
-  --color-accent-red: #e25e44;
-  --color-accent-amber: #deb71b;
-  --color-accent-green: #76a160;
-  --color-accent-cyan: #22b8f0;
+  --color-accent-red: #e2563b;
+  --color-accent-amber: #e6b016;
+  --color-accent-green: #6fa057;
+  --color-accent-cyan: #1fb6d6;
 
-  --color-line: rgba(17, 32, 37, 0.08);
-  --color-line-strong: rgba(17, 32, 37, 0.15);
+  --color-line: rgba(20, 36, 43, 0.08);
+  --color-line-strong: rgba(20, 36, 43, 0.16);
+
+  /* Lively brand gradient — used for hero accents + active states */
+  --gradient-brand: linear-gradient(115deg, #235f70 0%, #2f7d92 45%, #1fb6d6 100%);
+  --gradient-brand-vivid: linear-gradient(125deg, #1d5263 0%, #2f7d92 40%, #1fb6d6 78%, #46d3ef 100%);
+  --gradient-eggplant: linear-gradient(120deg, #4a3f59 0%, #5a4d6b 55%, #7d6b91 100%);
+
+  /* Elevation scale — layered, tinted-cool shadows for real depth */
+  --shadow-xs: 0 1px 2px rgba(20, 36, 43, 0.05);
+  --shadow-sm: 0 1px 3px rgba(20, 36, 43, 0.06), 0 4px 10px -4px rgba(20, 36, 43, 0.08);
+  --shadow-md: 0 2px 6px rgba(20, 36, 43, 0.07), 0 12px 26px -10px rgba(20, 36, 43, 0.16);
+  --shadow-lg: 0 6px 16px rgba(20, 36, 43, 0.10), 0 24px 48px -16px rgba(20, 36, 43, 0.24);
+  --shadow-brand: 0 4px 14px -2px rgba(47, 125, 146, 0.45), 0 12px 30px -10px rgba(31, 182, 214, 0.40);
+  --ring-brand: 0 0 0 3px rgba(31, 182, 214, 0.18);
 
   /* RAG (calibrated to the brand accent palette) */
-  --color-rag-red: #e25e44;
+  --color-rag-red: #e2563b;
   --color-rag-red-stroke: #a73a25;
-  --color-rag-amber: #deb71b;
+  --color-rag-amber: #e6b016;
   --color-rag-amber-stroke: #9c7d09;
-  --color-rag-green: #76a160;
+  --color-rag-green: #6fa057;
   --color-rag-green-stroke: #426d30;
 
-  --font-display: var(--font-cairo), system-ui, -apple-system, sans-serif;
-  --font-body: var(--font-nunito), system-ui, -apple-system, sans-serif;
+}
+
+/* NOTE: font families are intentionally NOT declared in @theme. next/font
+   injects --font-display (Montserrat) and --font-body (Roboto) directly onto
+   <body> at runtime; @theme would inline an empty value at build time and
+   fall the whole UI back to a serif. We build full stacks here from those
+   runtime vars + a system fallback, and consume the stacks everywhere. */
+/* font-display / font-body utilities (used as classes throughout the app).
+   next/font injects --font-display (Montserrat) / --font-body (Roboto) onto
+   <body>, so we reference those vars directly with an inline system fallback.
+   We deliberately avoid an intermediate --stack-* var: Tailwind hoists bare
+   custom-property declarations to :root, where --font-* is out of scope and
+   resolves empty (serif fallback). */
+@utility font-display {
+  font-family: var(--font-display), "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+@utility font-body {
+  font-family: var(--font-body), "Segoe UI", system-ui, -apple-system, sans-serif;
 }
 
 html,
 body {
-  background: var(--color-cream);
+  /* Cool, faintly tinted page wash with a soft teal/cyan glow top-corner so
+     the surface has depth instead of reading as flat off-white. */
+  background:
+    radial-gradient(140% 120% at 100% -10%, rgba(31, 182, 214, 0.06) 0%, rgba(31, 182, 214, 0) 42%),
+    radial-gradient(120% 120% at -10% 110%, rgba(90, 77, 107, 0.05) 0%, rgba(90, 77, 107, 0) 48%),
+    var(--color-cream);
+  background-attachment: fixed;
   color: var(--color-ink);
-  font-family: var(--font-body);
+  font-family: var(--font-body), "Segoe UI", system-ui, -apple-system, sans-serif;
   font-weight: 400;
   font-size: 15px;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  letter-spacing: 0;
 }
 
 * {
@@ -65,33 +105,80 @@ body {
 
 h1, h2, h3, h4, h5, h6,
 .font-display {
-  font-family: var(--font-display);
-  font-weight: 600;
+  font-family: var(--font-display), "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-weight: 700;
   color: var(--color-ink-strong);
-  line-height: 1.1;
+  line-height: 1.12;
+  /* Montserrat is geometric — a small negative track keeps headings tight
+     and modern without the wide, dated feel. */
+  letter-spacing: -0.018em;
 }
 
-/* Distinctive Sycamore Square section title pattern: [ Title ] in teal */
+/* Section title: gradient teal left-border accent */
 .brand-title {
-  font-family: var(--font-display);
-  font-weight: 600;
-  color: var(--color-sycamore);
+  font-family: var(--font-display), "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-weight: 800;
+  color: var(--color-ink-strong);
+  letter-spacing: -0.022em;
   display: inline-flex;
   align-items: center;
-  gap: 14px;
+  padding-left: 14px;
+  position: relative;
+  line-height: 1.12;
 }
-.brand-title::before,
-.brand-title::after {
+.brand-title::before {
   content: "";
-  display: inline-block;
-  width: 8px;
-  height: 22px;
-  border: 2px solid currentColor;
-  border-right: none;
+  position: absolute;
+  left: 0;
+  top: 6%;
+  bottom: 6%;
+  width: 4px;
+  border-radius: 999px;
+  background: var(--gradient-brand-vivid);
+  box-shadow: 0 0 10px -1px rgba(31, 182, 214, 0.55);
 }
-.brand-title::after {
-  border: 2px solid currentColor;
-  border-left: none;
+
+/* Lively hero band utility — deeper glow + crisp top highlight */
+.hero-gradient {
+  position: relative;
+  background:
+    radial-gradient(130% 150% at 100% -20%, rgba(31, 182, 214, 0.22) 0%, rgba(31, 182, 214, 0) 52%),
+    radial-gradient(120% 170% at -5% 120%, rgba(90, 77, 107, 0.14) 0%, rgba(90, 77, 107, 0) 50%),
+    linear-gradient(180deg, #ffffff 0%, var(--color-sycamore-tint) 100%);
+}
+.hero-gradient::before {
+  /* hairline of light along the top edge for a glassy, lifted feel */
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 14%);
+  pointer-events: none;
+}
+
+/* Glassy elevated surface — for cards/panels that should feel lifted */
+.surface-raised {
+  background: var(--color-paper);
+  border: 1px solid var(--color-line);
+  box-shadow: var(--shadow-md);
+}
+
+/* Frosted, deeper panel used behind key content */
+.surface-glass {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(10px) saturate(1.2);
+  -webkit-backdrop-filter: blur(10px) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: var(--shadow-md);
+}
+
+/* Gradient text accent */
+.text-gradient-brand {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 /* Inputs */
@@ -100,7 +187,7 @@ input[type="number"],
 input[type="search"],
 textarea,
 select {
-  font-family: var(--font-body);
+  font-family: var(--font-body), "Segoe UI", system-ui, -apple-system, sans-serif;
 }
 
 /* Leaflet building code label — small white pill rendered as a divIcon */
@@ -112,16 +199,16 @@ select {
   overflow: visible;
 }
 .building-label-pill {
-  background: rgba(255, 255, 255, 0.96);
-  border: 0.5px solid rgba(17, 32, 37, 0.18);
-  border-radius: 4px;
-  padding: 1px 5px;
+  background: rgba(255, 255, 255, 0.97);
+  border: 0.5px solid rgba(20, 36, 43, 0.16);
+  border-radius: 6px;
+  padding: 1.5px 6px;
   font-size: 10.5px;
-  font-weight: 500;
-  color: #1f1f1f;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  font-family: var(--font-body);
-  letter-spacing: 0.01em;
+  font-weight: 600;
+  color: var(--color-ink-strong);
+  box-shadow: 0 1px 3px rgba(20, 36, 43, 0.10);
+  font-family: var(--font-body), "Segoe UI", system-ui, -apple-system, sans-serif;
+  letter-spacing: 0;
   white-space: nowrap;
   pointer-events: none;
   display: inline-block;
@@ -138,7 +225,7 @@ select {
   font-size: 12.5px;
   color: var(--color-ink);
   box-shadow: 0 12px 32px rgba(17, 32, 37, 0.18), 0 1px 3px rgba(17, 32, 37, 0.08);
-  font-family: var(--font-body);
+  font-family: var(--font-body), "Segoe UI", system-ui, -apple-system, sans-serif;
   min-width: 220px;
   pointer-events: none;
   line-height: 1.4;
@@ -150,7 +237,7 @@ select {
 /* Leaflet container — blend with cream surface */
 .leaflet-container {
   background: var(--color-cream-edge) !important;
-  font-family: var(--font-body);
+  font-family: var(--font-body), "Segoe UI", system-ui, -apple-system, sans-serif;
   outline: none;
   /* Confine Leaflet's internal panes/controls (z-index up to 1000) to the
      map's own stacking context so they can never paint over body-level
@@ -214,7 +301,7 @@ select {
   background: var(--color-paper) !important;
   border: 0.5px solid var(--color-line-strong) !important;
   border-radius: 10px !important;
-  font-family: var(--font-body) !important;
+  font-family: var(--font-body), "Segoe UI", system-ui, -apple-system, sans-serif !important;
 }
 
 /* Recharts tooltip */
@@ -222,7 +309,7 @@ select {
   border-radius: 8px !important;
   border: 0.5px solid var(--color-line-strong) !important;
   box-shadow: 0 8px 24px rgba(17, 32, 37, 0.12) !important;
-  font-family: var(--font-body) !important;
+  font-family: var(--font-body), "Segoe UI", system-ui, -apple-system, sans-serif !important;
   font-size: 12px !important;
 }
 

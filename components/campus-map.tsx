@@ -242,12 +242,12 @@ function HoverCardContent({
   buildingName: string;
 }) {
   const c = RAG_COLORS[section.rag];
-  const eyebrow = { fontSize: 9.5, color: "#9aa3aa", textTransform: "uppercase" as const, letterSpacing: "0.12em", fontWeight: 600, fontFamily: "var(--font-cairo)" };
+  const eyebrow = { fontSize: 9.5, color: "#9aa3aa", textTransform: "uppercase" as const, letterSpacing: "0.12em", fontWeight: 600, fontFamily: "var(--font-display)" };
   const value = { fontSize: 12.5, color: "#1f1f1f", fontWeight: 500 };
   return (
     <div style={{ minWidth: 230 }}>
       <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 8, marginBottom: 4 }}>
-        <div style={{ fontFamily: "var(--font-cairo)", fontSize: 15, fontWeight: 600, color: "#377587" }}>{section.id}</div>
+        <div style={{ fontFamily: "var(--font-display)", fontSize: 15, fontWeight: 600, color: "#377587" }}>{section.id}</div>
         <div
           style={{
             fontSize: 10,
@@ -256,7 +256,7 @@ function HoverCardContent({
             background: c.bg,
             padding: "2px 8px",
             borderRadius: 999,
-            fontFamily: "var(--font-cairo)",
+            fontFamily: "var(--font-display)",
           }}
         >
           {c.label}
