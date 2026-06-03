@@ -25,7 +25,8 @@ import {
 import { usePortalStore, findSectionById, findBuildingByCode } from "@/lib/store";
 import { RAG_COLORS, formatGbpFull } from "@/lib/rag";
 import type { RagStatus, RoofType } from "@/lib/types";
-import { Camera, ClipboardCheck, Pencil, Wrench } from "lucide-react";
+import { ClipboardCheck, Pencil, Wrench } from "lucide-react";
+import { PhotoCapture } from "@/components/photo-capture";
 import { toast } from "sonner";
 
 const AREA_OPTIONS = [
@@ -321,15 +322,15 @@ export function SectionEditor({ open, onOpenChange, sectionId, mode }: SectionEd
           </Field>
 
           {isAudit && (
-            <div className="flex items-center gap-3 rounded-xl border border-dashed border-[color:var(--color-line-strong)] bg-[color:var(--color-cream)] px-4 py-3 text-[color:var(--color-ink-muted)]">
-              <Camera className="h-4 w-4 shrink-0" />
-              <div className="flex-1">
-                <div className="text-[12.5px] font-medium text-[color:var(--color-ink-soft)] font-display">
-                  Photo upload
-                </div>
-                <div className="text-[11px]">Demo build — drag &amp; drop not active in preview</div>
-              </div>
-            </div>
+            <Field label="Site photos" eyebrow>
+              <PhotoCapture sectionId={section.id} variant="audit" />
+            </Field>
+          )}
+
+          {!isAudit && (
+            <Field label="Roof photo" eyebrow>
+              <PhotoCapture sectionId={section.id} variant="edit" />
+            </Field>
           )}
         </DialogBody>
 
