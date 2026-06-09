@@ -4,7 +4,7 @@ import { Suspense, useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Header } from "@/components/header";
+import { Header, type AppEnv } from "@/components/header";
 import { KpiGrid, HeroStats } from "@/components/kpi-grid";
 import { BuildingDetail } from "@/components/building-detail";
 import { SectionEditor } from "@/components/section-editor";
@@ -12,6 +12,7 @@ import { AuditLog } from "@/components/audit-log";
 import { AssetsTable } from "@/components/assets-table";
 import { AnalyticsPage } from "@/components/analytics-page";
 import { CampusMapClient } from "@/components/dynamic-map";
+import { AgentsWorkspace } from "@/components/agents-workspace";
 import { usePortalStore } from "@/lib/store";
 import { LayoutGrid, Map as MapIcon, Building2, ClipboardCheck, BarChart3 } from "lucide-react";
 
@@ -27,13 +28,24 @@ function PageInner() {
     TAB_VALUES.includes(initialTab) ? initialTab : "overview"
   );
 
+  const initialEnv = (searchParams.get("env") as AppEnv) || "internal";
+  const [env, setEnv] = useState<AppEnv>(
+    initialEnv === "portal" || initialEnv === "internal" ? initialEnv : "internal"
+  );
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
+    let changed = false;
     if (params.get("tab") !== tab) {
       params.set("tab", tab);
-      router.replace(`/?${params.toString()}`, { scroll: false });
+      changed = true;
     }
-  }, [tab, router]);
+    if (params.get("env") !== env) {
+      params.set("env", env);
+      changed = true;
+    }
+    if (changed) router.replace(`/?${params.toString()}`, { scroll: false });
+  }, [tab, env, router]);
 
   const { selectedSectionId, selectSection } = usePortalStore();
 
@@ -53,8 +65,13 @@ function PageInner() {
 
   return (
     <div className="min-h-screen bg-[color:var(--color-cream)] flex flex-col">
-      <Header />
+      <Header env={env} onEnvChange={setEnv} />
 
+      {env === "internal" ? (
+        <main className="px-3 sm:px-5 lg:px-7 py-4 sm:py-6 flex-1 flex flex-col gap-4 sm:gap-6 max-w-[1600px] w-full mx-auto">
+          <AgentsWorkspace />
+        </main>
+      ) : (
       <Tabs value={tab} onValueChange={(v) => setTab(v as TabValue)}>
         <div className="px-3 sm:px-5 lg:px-7 border-b border-[color:var(--color-line)] bg-[color:var(--color-paper)]">
           <TabsList className="my-3">
@@ -184,6 +201,7 @@ function PageInner() {
           </div>
         </footer>
       </Tabs>
+      )}
 
       <SectionEditor
         open={editorOpen}
