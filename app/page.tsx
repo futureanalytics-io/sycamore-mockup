@@ -3,219 +3,148 @@
 import { Suspense, useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Header, type AppEnv } from "@/components/header";
-import { KpiGrid, HeroStats } from "@/components/kpi-grid";
-import { BuildingDetail } from "@/components/building-detail";
-import { SectionEditor } from "@/components/section-editor";
-import { AuditLog } from "@/components/audit-log";
-import { AssetsTable } from "@/components/assets-table";
-import { AnalyticsPage } from "@/components/analytics-page";
-import { CampusMapClient } from "@/components/dynamic-map";
-import { AgentsWorkspace } from "@/components/agents-workspace";
-import { usePortalStore } from "@/lib/store";
-import { LayoutGrid, Map as MapIcon, Building2, ClipboardCheck, BarChart3 } from "lucide-react";
+import { Sidebar, type AppView } from "@/components/sidebar";
+import { HomePage } from "@/components/home-page";
+import { SycKPI } from "@/components/syckpi";
+import { SycFlow } from "@/components/sycflow";
+import { SycAI } from "@/components/sycai";
+import { PortalView } from "@/components/portal-view";
+import { Menu, ShieldHalf, LayoutDashboard } from "lucide-react";
 
-const TAB_VALUES = ["overview", "map", "analytics", "assets", "audits"] as const;
-type TabValue = (typeof TAB_VALUES)[number];
+const VIEWS: AppView[] = ["home", "syckpi", "sycflow", "sycai"];
+const TITLES: Record<AppView, string> = { home: "Home", syckpi: "SycKPI", sycflow: "SycFlow", sycai: "SycAI" };
+
+type AppEnv = "internal" | "portal";
+
+/* Header toggle: Sycamore (internal) vs the client portal (external). */
+function EnvToggle({ env, onChange }: { env: AppEnv; onChange: (e: AppEnv) => void }) {
+  const opts: { key: AppEnv; label: string; sub: string; icon: React.ComponentType<{ className?: string }> }[] = [
+    { key: "internal", label: "Sycamore", sub: "Internal", icon: ShieldHalf },
+    { key: "portal", label: "Client portal", sub: "External", icon: LayoutDashboard },
+  ];
+  return (
+    <div className="flex items-center gap-1 rounded-full border border-[color:var(--color-line)] bg-[color:var(--color-cream-edge)]/60 p-1 shadow-[inset_0_1px_2px_rgba(20,36,43,0.05)]">
+      {opts.map((o) => {
+        const on = env === o.key;
+        const Icon = o.icon;
+        return (
+          <button
+            key={o.key}
+            onClick={() => onChange(o.key)}
+            aria-pressed={on}
+            title={`${o.label} · ${o.sub}`}
+            className={`inline-flex items-center gap-2 rounded-full h-8 px-3 text-[12.5px] font-display font-semibold transition-all duration-200 ${
+              on
+                ? "bg-gradient-to-b from-white to-[color:var(--color-sycamore-tint)] text-[color:var(--color-sycamore-strong)] shadow-[0_1px_3px_rgba(20,36,43,0.12),0_3px_10px_-3px_rgba(47,125,146,0.30)] ring-1 ring-[color:var(--color-sycamore)]/15"
+                : "text-[color:var(--color-ink-muted)] hover:text-[color:var(--color-ink-strong)]"
+            }`}
+          >
+            <Icon className="h-3.5 w-3.5" />
+            <span>{o.label}</span>
+            <span className="hidden md:inline text-[10px] uppercase tracking-[0.12em] opacity-60">{o.sub}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
 
 function PageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const initialTab = (searchParams.get("tab") as TabValue) || "overview";
 
-  const [tab, setTab] = useState<TabValue>(
-    TAB_VALUES.includes(initialTab) ? initialTab : "overview"
-  );
+  const initialView = (searchParams.get("view") as AppView) || "home";
+  const [view, setView] = useState<AppView>(VIEWS.includes(initialView) ? initialView : "home");
 
   const initialEnv = (searchParams.get("env") as AppEnv) || "internal";
-  const [env, setEnv] = useState<AppEnv>(
-    initialEnv === "portal" || initialEnv === "internal" ? initialEnv : "internal"
-  );
+  const [env, setEnv] = useState<AppEnv>(initialEnv === "portal" ? "portal" : "internal");
 
+  const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  // keep ?view= and ?env= in the URL so deep-links work
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     let changed = false;
-    if (params.get("tab") !== tab) {
-      params.set("tab", tab);
-      changed = true;
-    }
-    if (params.get("env") !== env) {
-      params.set("env", env);
-      changed = true;
-    }
+    if (params.get("view") !== view) { params.set("view", view); changed = true; }
+    if (params.get("env") !== env) { params.set("env", env); changed = true; }
     if (changed) router.replace(`/?${params.toString()}`, { scroll: false });
-  }, [tab, env, router]);
+  }, [view, env, router]);
 
-  const { selectedSectionId, selectSection } = usePortalStore();
-
-  // Load any persisted edits / audits / photos from localStorage on mount.
-  const hydrate = usePortalStore((s) => s.hydrate);
-  useEffect(() => {
-    hydrate();
-  }, [hydrate]);
-
-  const [editorOpen, setEditorOpen] = useState(false);
-  const [editorMode, setEditorMode] = useState<"audit" | "edit">("audit");
-
-  const openEditor = (mode: "audit" | "edit") => {
-    setEditorMode(mode);
-    setEditorOpen(true);
-  };
+  const isPortal = env === "portal";
 
   return (
-    <div className="min-h-screen bg-[color:var(--color-cream)] flex flex-col">
-      <Header env={env} onEnvChange={setEnv} />
+    <div className="min-h-screen bg-[color:var(--color-cream)] flex">
+      {/* sidebar only in the internal environment */}
+      {!isPortal && (
+        <Sidebar
+          view={view}
+          onView={setView}
+          collapsed={collapsed}
+          onToggleCollapsed={() => setCollapsed((c) => !c)}
+          mobileOpen={mobileOpen}
+          onCloseMobile={() => setMobileOpen(false)}
+        />
+      )}
 
-      {env === "internal" ? (
-        <main className="px-3 sm:px-5 lg:px-7 py-4 sm:py-6 flex-1 flex flex-col gap-4 sm:gap-6 max-w-[1600px] w-full mx-auto">
-          <AgentsWorkspace />
-        </main>
-      ) : (
-      <Tabs value={tab} onValueChange={(v) => setTab(v as TabValue)}>
-        <div className="px-3 sm:px-5 lg:px-7 border-b border-[color:var(--color-line)] bg-[color:var(--color-paper)]">
-          <TabsList className="my-3">
-            <TabsTrigger value="overview">
-              <LayoutGrid className="h-3.5 w-3.5" />
-              Overview
-            </TabsTrigger>
-            <TabsTrigger value="map">
-              <MapIcon className="h-3.5 w-3.5" />
-              Campus map
-            </TabsTrigger>
-            <TabsTrigger value="analytics">
-              <BarChart3 className="h-3.5 w-3.5" />
-              Analytics
-            </TabsTrigger>
-            <TabsTrigger value="assets">
-              <Building2 className="h-3.5 w-3.5" />
-              Assets
-            </TabsTrigger>
-            <TabsTrigger value="audits">
-              <ClipboardCheck className="h-3.5 w-3.5" />
-              Audit log
-            </TabsTrigger>
-          </TabsList>
-        </div>
+      <div className="flex-1 min-w-0 flex flex-col">
+        {/* top bar: hamburger (internal) + page title + env toggle */}
+        <div className="h-[60px] sm:h-[68px] sticky top-0 z-[400] flex items-center gap-3 px-4 sm:px-6 border-b border-[color:var(--color-line)] bg-[color:var(--color-paper)]/85 backdrop-blur-md">
+          <div className="h-[3px] w-full absolute top-0 left-0" style={{ background: "var(--gradient-brand)" }} />
+          {!isPortal && (
+            <button onClick={() => setMobileOpen(true)} className="lg:hidden h-9 w-9 rounded-lg hover:bg-[color:var(--color-cream)] flex items-center justify-center text-[color:var(--color-ink-soft)]" aria-label="Open menu">
+              <Menu className="h-5 w-5" />
+            </button>
+          )}
 
-        <main className="px-3 sm:px-5 lg:px-7 py-4 sm:py-6 flex-1 flex flex-col gap-4 sm:gap-6 max-w-[1600px] w-full mx-auto">
-          <TabsContent value="overview" className="space-y-6 m-0">
-            <div className="hero-gradient rounded-2xl border border-[color:var(--color-line)] px-4 py-5 sm:px-7 sm:py-6 shadow-[0_1px_3px_rgba(20,36,43,0.05),0_10px_30px_-16px_rgba(20,36,43,0.18)]">
-              <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5">
-                <div>
-                  <div className="inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.16em] text-[color:var(--color-sycamore-strong)] font-display font-bold mb-2.5 rounded-full bg-[color:var(--color-paper)]/70 border border-[color:var(--color-sycamore)]/15 px-2.5 py-1">
-                    <span className="relative flex h-1.5 w-1.5">
-                      <span className="absolute inline-flex h-full w-full rounded-full bg-[color:var(--color-sycamore-bright)] opacity-60 animate-ping" />
-                      <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[color:var(--color-sycamore-bright)]" />
-                    </span>
-                    Capital condition · Live
-                  </div>
-                  <h1 className="brand-title text-[30px] leading-none">Roof asset overview</h1>
-                  <p className="text-[13px] text-[color:var(--color-ink-soft)] mt-3 max-w-[680px]">
-                    Field auditors update RAG and remaining life in the moment; Estates &amp; Facilities
-                    see capital exposure refresh immediately across every chart and table.
-                  </p>
-                </div>
-                <HeroStats />
-              </div>
-            </div>
-
-            <KpiGrid />
-
-            <div className="grid grid-cols-1 xl:grid-cols-[1fr_360px] gap-6">
-              <CampusMapClient
-                height={560}
-                onSectionDoubleClick={() => openEditor("edit")}
-              />
-              <BuildingDetail onOpenEditor={openEditor} />
-            </div>
-
-            <AuditLog compact limit={4} />
-          </TabsContent>
-
-          <TabsContent value="map" className="m-0 space-y-4">
-            <div className="flex items-end justify-between">
-              <div>
-                <div className="text-[11px] uppercase tracking-[0.2em] text-[color:var(--color-sycamore)] font-display font-semibold mb-1.5">
-                  Live campus map
-                </div>
-                <h1 className="brand-title text-[24px] leading-none">University of Bradford estate</h1>
-                <p className="text-[12.5px] text-[color:var(--color-ink-muted)] mt-2 max-w-[640px]">
-                  Hover a section for live details. Click to edit master data or log a new audit.
-                  Toggle <strong className="font-display text-[color:var(--color-ink-strong)]">Edit polygons</strong> to
-                  drag vertices, trace new sections, or export the full set as JSON.
-                </p>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 xl:grid-cols-[1fr_360px] gap-6">
-              <CampusMapClient
-                height={680}
-                fullWidth
-                onSectionDoubleClick={() => openEditor("edit")}
-              />
-              <BuildingDetail onOpenEditor={openEditor} />
-            </div>
-          </TabsContent>
-
-          <TabsContent value="analytics" className="m-0">
-            <AnalyticsPage />
-          </TabsContent>
-
-          <TabsContent value="assets" className="m-0 space-y-4">
-            <div>
-              <div className="text-[11px] uppercase tracking-[0.2em] text-[color:var(--color-sycamore)] font-display font-semibold mb-1.5">
-                Asset register
-              </div>
-              <h1 className="brand-title text-[24px] leading-none">All roof sections</h1>
-            </div>
-            <AssetsTable />
-          </TabsContent>
-
-          <TabsContent value="audits" className="m-0 space-y-4">
-            <div>
-              <div className="text-[11px] uppercase tracking-[0.2em] text-[color:var(--color-sycamore)] font-display font-semibold mb-1.5">
-                Audit trail
-              </div>
-              <h1 className="brand-title text-[24px] leading-none">Full audit log</h1>
-            </div>
-            <AuditLog />
-          </TabsContent>
-        </main>
-
-        <footer className="mt-auto border-t border-[color:var(--color-line)] bg-[color:var(--color-navy)] text-white py-5 px-4 sm:px-7">
-          <div className="max-w-[1600px] mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-[11.5px] text-center sm:text-left">
-            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-3 gap-y-1 opacity-90">
+          {/* Logo in the header only for the client portal (no sidebar there);
+              the internal view carries the logo in the sidebar instead. */}
+          {isPortal && (
+            <>
               <Image
-                src="/sycamore-logo-white.svg"
+                src="/sycamore-logo.svg"
                 alt="Sycamore Square Group"
                 width={172}
                 height={48}
-                className="h-7 w-auto"
+                priority
+                className="h-7 sm:h-8 w-auto"
               />
-              <span className="hidden sm:inline opacity-30">·</span>
-              <span className="opacity-80">Capital condition platform</span>
-              <span className="opacity-60">·</span>
-              <span className="opacity-80">Deployed for University of Bradford</span>
-            </div>
-            <div className="opacity-70">© {new Date().getFullYear()} Sycamore Square Group Ltd.</div>
-          </div>
-        </footer>
-      </Tabs>
-      )}
+              <div className="h-6 w-px bg-[color:var(--color-line-strong)] hidden sm:block" />
+            </>
+          )}
+          <h1 className="font-display font-bold text-[15px] sm:text-[16px] text-[color:var(--color-ink-strong)] truncate">
+            {isPortal ? "Roof asset portal" : TITLES[view]}
+          </h1>
 
-      <SectionEditor
-        open={editorOpen}
-        onOpenChange={(v) => {
-          setEditorOpen(v);
-          if (!v) {
-            // selectSection is intentionally not cleared so the panel still
-            // shows the section after the modal closes
-            void selectSection;
-          }
-        }}
-        sectionId={selectedSectionId}
-        mode={editorMode}
-      />
+          {/* In the client portal there's no sidebar, so show the client badge here */}
+          {isPortal && (
+            <div className="hidden lg:flex items-center gap-2.5 ml-3 bg-[color:var(--color-cream)] border border-[color:var(--color-line)] rounded-full pl-2 pr-3 py-1">
+              <div className="relative h-6 w-[72px]">
+                <Image src="/uob-logo.jpg" alt="University of Bradford" fill sizes="72px" className="object-contain object-left" />
+              </div>
+              <div className="h-4 w-px bg-[color:var(--color-line-strong)]" />
+              <span className="text-[11.5px] font-medium text-[color:var(--color-ink-soft)]">Estates &amp; Facilities</span>
+            </div>
+          )}
+
+          <div className="ml-auto">
+            <EnvToggle env={env} onChange={setEnv} />
+          </div>
+        </div>
+
+        <main className={`flex-1 ${isPortal ? "px-3 sm:px-5 lg:px-7" : "px-4 sm:px-6 lg:px-8"} py-5 sm:py-6 w-full max-w-[1500px] mx-auto`}>
+          {isPortal ? (
+            <PortalView />
+          ) : (
+            <>
+              {view === "home" && <HomePage onView={setView} />}
+              {view === "syckpi" && <SycKPI />}
+              {view === "sycflow" && <SycFlow />}
+              {view === "sycai" && <SycAI />}
+            </>
+          )}
+        </main>
+      </div>
     </div>
   );
 }

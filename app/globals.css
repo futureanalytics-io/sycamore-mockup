@@ -2,10 +2,10 @@
 @import "leaflet/dist/leaflet.css";
 
 /*
- * Brand tokens — sycamoresquaregroup.co.uk, refreshed for a modern feel.
- * Display: Plus Jakarta Sans · Body: Inter
- * Primary teal #2f7d92 · Cyan lift #1fb6d6 · Eggplant #5a4d6b
- * Surfaces moved off beige onto a cool, crisp off-white.
+ * Brand tokens — sycamoresquaregroup.co.uk.
+ * Primary teal #377587 (the real Sycamore Square brand teal, from their logo)
+ * · soft lift #4a93a8 · Eggplant #5a4d6b. Light, minimalist, professional —
+ * matching their actual website. Surfaces on a cool, crisp off-white.
  */
 @theme {
   /* Surfaces — cool, crisp, slightly tinted toward teal */
@@ -20,12 +20,13 @@
   --color-ink-muted: #6b7880;
   --color-ink-faint: #aab4ba;
 
-  /* Primary teal — a touch richer + a lively cyan partner for gradients */
-  --color-sycamore: #2f7d92;
-  --color-sycamore-strong: #235f70;
-  --color-sycamore-bright: #1fb6d6;
-  --color-sycamore-soft: #dceef2;
-  --color-sycamore-tint: #eef7f9;
+  /* Primary teal — Sycamore Square's real brand teal (#377587), with a
+     slightly deeper shade for strong text and a soft lift for accents. */
+  --color-sycamore: #377587;
+  --color-sycamore-strong: #2a5b6a;
+  --color-sycamore-bright: #4a93a8;
+  --color-sycamore-soft: #dcebef;
+  --color-sycamore-tint: #eef6f8;
 
   --color-eggplant: #5a4d6b;
   --color-eggplant-soft: #ebe7f0;
@@ -34,14 +35,15 @@
   --color-accent-red: #e2563b;
   --color-accent-amber: #e6b016;
   --color-accent-green: #6fa057;
-  --color-accent-cyan: #1fb6d6;
+  --color-accent-cyan: #4a93a8;
 
   --color-line: rgba(20, 36, 43, 0.08);
   --color-line-strong: rgba(20, 36, 43, 0.16);
 
-  /* Lively brand gradient — used for hero accents + active states */
-  --gradient-brand: linear-gradient(115deg, #235f70 0%, #2f7d92 45%, #1fb6d6 100%);
-  --gradient-brand-vivid: linear-gradient(125deg, #1d5263 0%, #2f7d92 40%, #1fb6d6 78%, #46d3ef 100%);
+  /* Brand gradient — built from Sycamore's real teal (#377587), kept refined
+     rather than neon to match their professional, minimalist identity. */
+  --gradient-brand: linear-gradient(115deg, #2a5b6a 0%, #377587 50%, #4a93a8 100%);
+  --gradient-brand-vivid: linear-gradient(125deg, #244e5b 0%, #377587 45%, #4a93a8 80%, #62aabd 100%);
   --gradient-eggplant: linear-gradient(120deg, #4a3f59 0%, #5a4d6b 55%, #7d6b91 100%);
 
   /* Elevation scale — layered, tinted-cool shadows for real depth */
@@ -49,8 +51,8 @@
   --shadow-sm: 0 1px 3px rgba(20, 36, 43, 0.06), 0 4px 10px -4px rgba(20, 36, 43, 0.08);
   --shadow-md: 0 2px 6px rgba(20, 36, 43, 0.07), 0 12px 26px -10px rgba(20, 36, 43, 0.16);
   --shadow-lg: 0 6px 16px rgba(20, 36, 43, 0.10), 0 24px 48px -16px rgba(20, 36, 43, 0.24);
-  --shadow-brand: 0 4px 14px -2px rgba(47, 125, 146, 0.45), 0 12px 30px -10px rgba(31, 182, 214, 0.40);
-  --ring-brand: 0 0 0 3px rgba(31, 182, 214, 0.18);
+  --shadow-brand: 0 4px 14px -2px rgba(55, 117, 135, 0.45), 0 12px 30px -10px rgba(74, 147, 168, 0.40);
+  --ring-brand: 0 0 0 3px rgba(74, 147, 168, 0.18);
 
   /* RAG (calibrated to the brand accent palette) */
   --color-rag-red: #e2563b;
@@ -85,7 +87,7 @@ body {
   /* Cool, faintly tinted page wash with a soft teal/cyan glow top-corner so
      the surface has depth instead of reading as flat off-white. */
   background:
-    radial-gradient(140% 120% at 100% -10%, rgba(31, 182, 214, 0.06) 0%, rgba(31, 182, 214, 0) 42%),
+    radial-gradient(140% 120% at 100% -10%, rgba(74, 147, 168, 0.06) 0%, rgba(74, 147, 168, 0) 42%),
     radial-gradient(120% 120% at -10% 110%, rgba(90, 77, 107, 0.05) 0%, rgba(90, 77, 107, 0) 48%),
     var(--color-cream);
   background-attachment: fixed;
@@ -136,14 +138,14 @@ h1, h2, h3, h4, h5, h6,
   width: 4px;
   border-radius: 999px;
   background: var(--gradient-brand-vivid);
-  box-shadow: 0 0 10px -1px rgba(31, 182, 214, 0.55);
+  box-shadow: 0 0 10px -1px rgba(74, 147, 168, 0.55);
 }
 
 /* Lively hero band utility — deeper glow + crisp top highlight */
 .hero-gradient {
   position: relative;
   background:
-    radial-gradient(130% 150% at 100% -20%, rgba(31, 182, 214, 0.22) 0%, rgba(31, 182, 214, 0) 52%),
+    radial-gradient(130% 150% at 100% -20%, rgba(74, 147, 168, 0.22) 0%, rgba(74, 147, 168, 0) 52%),
     radial-gradient(120% 170% at -5% 120%, rgba(90, 77, 107, 0.14) 0%, rgba(90, 77, 107, 0) 50%),
     linear-gradient(180deg, #ffffff 0%, var(--color-sycamore-tint) 100%);
 }
