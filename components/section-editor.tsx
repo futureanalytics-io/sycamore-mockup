@@ -103,7 +103,7 @@ export function SectionEditor({ open, onOpenChange, sectionId, mode }: SectionEd
         lifeRemainingYears: life,
         notes: notes.trim() || "Routine inspection — no further notes.",
         area,
-        auditor: "Alex Bradford",
+        auditor: "Debbie Lewis",
       });
       setSubmitting(false);
       onOpenChange(false);
@@ -125,7 +125,7 @@ export function SectionEditor({ open, onOpenChange, sectionId, mode }: SectionEd
           buildingName: buildingName.trim() || building.name,
         },
         changeNote: notes.trim() || undefined,
-        auditor: "Alex Bradford",
+        auditor: "Debbie Lewis",
       });
       setSubmitting(false);
       onOpenChange(false);

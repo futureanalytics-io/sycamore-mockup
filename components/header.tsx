@@ -111,15 +111,15 @@ export function Header({ env, onEnvChange }: { env: AppEnv; onEnvChange: (e: App
           <div className="flex items-center gap-2.5 ml-1 sm:ml-0 pl-1 sm:pl-2 pr-1 py-1 rounded-full hover:bg-[color:var(--color-cream)] cursor-pointer transition-colors">
             <div className="leading-tight text-right hidden md:block">
               <div className="text-[12.5px] font-medium text-[color:var(--color-ink-strong)]">
-                Alex Bradford
+                Debbie Lewis
               </div>
-              <div className="text-[11px] text-[color:var(--color-ink-muted)]">Senior surveyor</div>
+              <div className="text-[11px] text-[color:var(--color-ink-muted)]">Group Director</div>
             </div>
             <div
               className="h-8 w-8 rounded-full text-white flex items-center justify-center text-[11px] font-bold font-display shadow-[0_2px_8px_-2px_rgba(47,125,146,0.6)]"
               style={{ background: "var(--gradient-brand)" }}
             >
-              AB
+              DL
             </div>
             {/* chevron only alongside the name (md+); orphaned on mobile otherwise */}
             <ChevronDown className="hidden md:block h-3.5 w-3.5 text-[color:var(--color-ink-muted)]" />

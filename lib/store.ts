@@ -293,7 +293,7 @@ export const usePortalStore = create<PortalState>((set, get) => ({
       dataUrl,
       caption: caption.trim() || "Site photo",
       timestamp: new Date().toISOString(),
-      auditor: auditor || "Alex Bradford",
+      auditor: auditor || "Debbie Lewis",
     };
     set((state) => ({
       buildings: state.buildings.map((b) => ({
