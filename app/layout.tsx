@@ -20,9 +20,9 @@ const poppinsBody = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Roof asset portal — Sycamore Square × University of Bradford",
+  title: "FutureOS — a proposal for Sycamore Square Group",
   description:
-    "Live RAG status, audit logging, data entry and capital planning for campus roof assets. By Sycamore Square Group.",
+    "A FutureAnalytics proposal for Sycamore Square Group: FutureOS, a custom AI operating system built on your own data — with a live, clickable product demo inside.",
 };
 
 export const viewport: Viewport = {

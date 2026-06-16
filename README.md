@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FutureOS — proposal for Sycamore Square Group
 
-## Getting Started
+A co-branded **FutureAnalytics × Sycamore Square Group** proposal website with a
+**live, clickable product mockup embedded inside it**. One shareable link: the
+proposal *is* the site, and the demo lives in the "Live demo" section.
 
-First, run the development server:
+Built with Next.js 15 (App Router) · React 19 · Tailwind v4 · Radix · Leaflet · Recharts · Zustand.
+
+## Routes
+
+| Route | What it is |
+|-------|-----------|
+| `/` | The proposal. Left sidebar of sections (Overview · The opportunity · What we propose · Live demo · How we work · Pricing · Next step). The demo section embeds the OS via an iframe with an "Open full screen" link. |
+| `/app` | The standalone **Sycamore Square OS** mockup (full screen). Internal workspace (Home · SycKPI · SycFlow · **SycBid** · SycAI) + a Client-portal toggle (University of Bradford roof-asset portal). |
+
+## Run
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000  (proposal)  ·  /app for the OS
+npm run build    # production build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Deploy (Vercel)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+vercel           # or: push to a repo connected to Vercel
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+No environment variables are required. **Everything is mocked** — there are no
+live data feeds, no API keys, and nothing leaves the browser. The OS demo runs
+inside an iframe so it keeps its own viewport while embedded in the proposal.
 
-## Learn More
+> If you later wire real AI (e.g. into SycAI or SycBid drafting), proxy the
+> Anthropic call through a Next.js API route so the key stays server-side, and
+> read it from `ANTHROPIC_API_KEY` (never hardcode it in client code). The
+> current build deliberately does **not** do this — the demo is scripted so it
+> never breaks in front of a client.
 
-To learn more about Next.js, take a look at the following resources:
+## Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+app/
+  page.tsx              # the proposal (renders ProposalShell)
+  app/page.tsx          # the standalone OS mockup
+  layout.tsx, globals.css
+components/
+  proposal/             # the proposal wrapper
+    proposal-shell.tsx  #   sidebar nav + header + section router + progress
+    sections.tsx        #   all proposal sections (methodology rewritten here)
+    brand.tsx           #   FutureAnalytics × SSG co-brand lockup
+  sycbid.tsx            # SycBid — Bidding & Opportunity Engine (mock pipeline)
+  sycflow / syckpi / sycai / home-page / portal-view / ...   # the OS modules
+lib/
+  bids-data.ts          # SycBid mock opportunities + scripted draft engine
+  agents-data / kpi-data / buildings-seed / store / ...
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## SycBid (mock only)
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The Bidding & Opportunity Engine demonstrates the full flow on illustrative
+data: scan sources (Contracts Finder / Find a Tender / CCS / Bloom / YORtender /
+NHS) → opportunity board with a **% match score** → opportunity detail with the
+match breakdown → **AI-drafted bid** → **comment → regenerate** loop (the
+comments compose into a visible revision prompt) → **approve** → **auto-generate
+& submit** the formatted proposal. All drafting is scripted in `lib/bids-data.ts`.

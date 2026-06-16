@@ -330,3 +330,32 @@ select {
   height: 1px;
   background: linear-gradient(to right, transparent, var(--color-line-strong), transparent);
 }
+
+/* ---------------------------------------------------------------------------
+ * FutureAnalytics palette — scoped to the proposal wrapper (.fa-theme).
+ * The proposal is FutureAnalytics' document, so its chrome uses FA's real
+ * brand (emerald #177E6B / ink #121417 / accent #33C98A, from futureanalytics.io).
+ * The embedded OS at /app is a separate document (iframe) and keeps Sycamore's
+ * own teal — so the co-brand reads as two distinct, intentional identities.
+ * We override the shared tokens here; every var(--color-sycamore*) /
+ * var(--gradient-brand) inside the proposal resolves to FA's palette.
+ * ------------------------------------------------------------------------- */
+.fa-theme {
+  --color-sycamore: #177e6b;
+  --color-sycamore-strong: #115c4e;
+  --color-sycamore-bright: #33c98a;
+  --color-sycamore-soft: #e3f0ec;
+  --color-sycamore-tint: #eef5f2;
+  --color-navy: #121417;
+  --gradient-brand: linear-gradient(115deg, #115c4e 0%, #177e6b 52%, #2fa88f 100%);
+  --gradient-brand-vivid: linear-gradient(125deg, #0e4c40 0%, #177e6b 45%, #2fa88f 80%, #33c98a 100%);
+  --shadow-brand: 0 4px 14px -2px rgba(23, 126, 107, 0.4), 0 12px 30px -10px rgba(51, 201, 138, 0.35);
+}
+/* hero/page washes are hardcoded to Sycamore cyan in the base styles — re-tint
+   them to FA emerald inside the proposal so the glow matches the brand. */
+.fa-theme .hero-gradient {
+  background:
+    radial-gradient(130% 150% at 100% -20%, rgba(51, 201, 138, 0.16) 0%, rgba(51, 201, 138, 0) 52%),
+    radial-gradient(120% 170% at -5% 120%, rgba(18, 20, 23, 0.05) 0%, rgba(18, 20, 23, 0) 50%),
+    linear-gradient(180deg, #ffffff 0%, var(--color-sycamore-tint) 100%);
+}

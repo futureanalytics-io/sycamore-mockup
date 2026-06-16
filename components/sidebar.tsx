@@ -12,14 +12,15 @@
  * Nav: Home · SycFlow · SycAI.
  */
 import Image from "next/image";
-import { Home, Gauge, Workflow, Sparkles, ChevronLeft, ChevronDown, X } from "lucide-react";
+import { Home, Gauge, Workflow, Gavel, Sparkles, ChevronLeft, ChevronDown, X } from "lucide-react";
 
-export type AppView = "home" | "syckpi" | "sycflow" | "sycai";
+export type AppView = "home" | "syckpi" | "sycflow" | "sycbid" | "sycai";
 
 const NAV: { key: AppView; label: string; sub: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { key: "home", label: "Home", sub: "Command centre", icon: Home },
   { key: "syckpi", label: "SycKPI", sub: "Metrics catalogue", icon: Gauge },
   { key: "sycflow", label: "SycFlow", sub: "Agents & workflow", icon: Workflow },
+  { key: "sycbid", label: "SycBid", sub: "Bids & tenders", icon: Gavel },
   { key: "sycai", label: "SycAI", sub: "Ask your data", icon: Sparkles },
 ];
 
