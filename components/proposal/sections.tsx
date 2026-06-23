@@ -33,10 +33,24 @@ import {
   ListChecks,
   TriangleAlert,
   ExternalLink,
+  Lock,
+  Laptop,
+  Server,
+  Network,
+  BadgeCheck,
+  KeyRound,
 } from "lucide-react";
 import { CoBrand } from "@/components/proposal/brand";
 
-export type SectionId = "overview" | "opportunity" | "propose" | "demo" | "method" | "pricing" | "next";
+export type SectionId =
+  | "overview"
+  | "opportunity"
+  | "propose"
+  | "demo"
+  | "method"
+  | "security"
+  | "pricing"
+  | "next";
 
 type Go = (id: SectionId) => void;
 
@@ -530,6 +544,112 @@ export function MethodologySection() {
             </div>
           ))}
         </div>
+      </div>
+    </div>
+  );
+}
+
+/* ============================== SECURITY ============================== */
+export function SecuritySection() {
+  return (
+    <div className="space-y-6">
+      <div>
+        <SectionEyebrow>
+          <ShieldCheck className="h-3 w-3" /> Security &amp; data protection
+        </SectionEyebrow>
+        <h2 className="font-display font-extrabold text-[28px] sm:text-[34px] leading-tight text-[color:var(--color-ink-strong)] max-w-[22ch]">
+          Your data stays yours — protected at every layer.
+        </h2>
+        <p className="text-[15px] text-[color:var(--color-ink-soft)] mt-4 max-w-[68ch] leading-relaxed">
+          FutureOS is deployed in <b className="text-[color:var(--color-ink-strong)] font-display">your own cloud</b>, and
+          you own the code and the data from day one — it never lives in our systems. On top of that foundation,
+          here&apos;s how we keep everything secure, and the extra hardening we can add for Sycamore.
+        </p>
+      </div>
+
+      {/* phased by sensitivity */}
+      <div className="surface-raised rounded-2xl p-5 flex items-start gap-3 border-l-4 border-l-[color:var(--color-sycamore)]">
+        <Layers className="h-5 w-5 text-[color:var(--color-sycamore)] shrink-0 mt-0.5" />
+        <p className="text-[13.5px] text-[color:var(--color-ink-soft)]">
+          <b className="text-[color:var(--color-ink-strong)] font-display">We start with the least sensitive data.</b> The first
+          build is the client portal and the bidding engine — public-sector tenders and the documents you already share with
+          clients. More sensitive data only comes on as the platform earns trust, on your timetable.
+        </p>
+      </div>
+
+      {/* baseline — how we work today */}
+      <div>
+        <h3 className="font-display text-[13px] font-bold uppercase tracking-[0.1em] text-[color:var(--color-sycamore)] mb-3">How our team already works</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="surface-raised rounded-2xl p-5">
+            <Laptop className="h-6 w-6 text-[color:var(--color-sycamore)] mb-3" />
+            <h4 className="font-display text-[14.5px] font-bold text-[color:var(--color-ink-strong)]">Locked-down devices</h4>
+            <p className="text-[12px] text-[color:var(--color-ink-muted)] mt-1 mb-3">Company laptops under Microsoft Intune policies.</p>
+            <ul className="space-y-1.5 text-[12.5px] text-[color:var(--color-ink-soft)]">
+              {[
+                "No USB sticks / removable media",
+                "Limited email attachments",
+                "Microsoft Defender on every device",
+                "No unapproved software installs",
+                "All device activity tracked & audited",
+              ].map((t) => (
+                <li key={t} className="flex gap-2">
+                  <Check className="h-3.5 w-3.5 shrink-0 mt-0.5 text-[color:var(--color-sycamore)]" />
+                  {t}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="surface-raised rounded-2xl p-5">
+            <Network className="h-6 w-6 text-[color:var(--color-sycamore)] mb-3" />
+            <h4 className="font-display text-[14.5px] font-bold text-[color:var(--color-ink-strong)]">Always-on VPN</h4>
+            <p className="text-[12.5px] text-[color:var(--color-ink-soft)] mt-1">
+              All of our traffic is routed through an always-on <b className="text-[color:var(--color-ink-strong)]">UK VPN</b> — no work happens on an open
+              connection.
+            </p>
+          </div>
+          <div className="surface-raised rounded-2xl p-5">
+            <BadgeCheck className="h-6 w-6 text-[color:var(--color-sycamore)] mb-3" />
+            <h4 className="font-display text-[14.5px] font-bold text-[color:var(--color-ink-strong)]">Indemnity insured</h4>
+            <p className="text-[12.5px] text-[color:var(--color-ink-soft)] mt-1">
+              Protected by professional indemnity insurance up to <b className="text-[color:var(--color-ink-strong)]">$1m</b>.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* optional hardening */}
+      <div>
+        <h3 className="font-display text-[13px] font-bold uppercase tracking-[0.1em] text-[color:var(--color-sycamore)] mb-3">Optional hardening for Sycamore</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="rounded-2xl p-5 bg-[color:var(--color-navy)] text-white shadow-[var(--shadow-md)]">
+            <Server className="h-6 w-6 text-[color:var(--color-sycamore-bright)] mb-3" />
+            <h4 className="font-display text-[15px] font-bold" style={{ color: "#ffffff" }}>Dedicated VM in your Azure</h4>
+            <p className="text-[13px] text-white/80 mt-1.5 leading-relaxed">
+              All development happens on a dedicated virtual machine that lives inside <b className="text-white">Sycamore&apos;s own Azure
+              environment</b>, reachable only over a VPN. Our team works inside your tenancy — nothing sensitive sits on a
+              local machine.
+            </p>
+          </div>
+          <div className="rounded-2xl p-5 bg-[color:var(--color-navy)] text-white shadow-[var(--shadow-md)]">
+            <KeyRound className="h-6 w-6 text-[color:var(--color-sycamore-bright)] mb-3" />
+            <h4 className="font-display text-[15px] font-bold" style={{ color: "#ffffff" }}>VPN-gated portal access</h4>
+            <p className="text-[13px] text-white/80 mt-1.5 leading-relaxed">
+              We can lock the portal so it&apos;s only reachable through a VPN we help you set up — so your team and your clients
+              alike access it on a controlled, private connection rather than the open internet.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* reassurance strip */}
+      <div className="surface-raised rounded-2xl p-5 flex items-start gap-3">
+        <Lock className="h-5 w-5 text-[color:var(--color-sycamore)] shrink-0 mt-0.5" />
+        <p className="text-[13px] text-[color:var(--color-ink-soft)]">
+          This complements Sycamore&apos;s own posture — you already hold <b className="text-[color:var(--color-ink-strong)]">Cyber Essentials</b>.
+          Because the platform runs in your cloud and you own it outright, you stay in full control of access, retention and
+          audit. We&apos;ll align the exact controls with your IT and insurers before anything goes live.
+        </p>
       </div>
     </div>
   );

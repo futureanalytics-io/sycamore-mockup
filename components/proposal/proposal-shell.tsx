@@ -20,6 +20,7 @@ import {
   X,
   ChevronRight,
   ExternalLink,
+  ShieldCheck,
 } from "lucide-react";
 
 const FA_SITE = "https://www.futureanalytics.io";
@@ -30,6 +31,7 @@ import {
   ProposeSection,
   DemoSection,
   MethodologySection,
+  SecuritySection,
   PricingSection,
   NextSection,
   type SectionId,
@@ -41,6 +43,7 @@ const NAV: { id: SectionId; label: string; sub: string; icon: React.ComponentTyp
   { id: "propose", label: "What we propose", sub: "FutureOS + three pillars", icon: Boxes },
   { id: "demo", label: "Live demo", sub: "Drive the product", icon: MonitorPlay },
   { id: "method", label: "How we work", sub: "Our agile delivery", icon: Repeat },
+  { id: "security", label: "Security", sub: "Data protection", icon: ShieldCheck },
   { id: "pricing", label: "Pricing", sub: "Simple & rolling", icon: CreditCard },
   { id: "next", label: "Next step", sub: "Book the walkthrough", icon: CalendarCheck },
 ];
@@ -195,6 +198,7 @@ function ShellInner() {
           {section === "propose" && <ProposeSection go={go} />}
           {section === "demo" && <DemoSection />}
           {section === "method" && <MethodologySection />}
+          {section === "security" && <SecuritySection />}
           {section === "pricing" && <PricingSection go={go} />}
           {section === "next" && <NextSection />}
 
